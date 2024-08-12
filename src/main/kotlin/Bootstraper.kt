@@ -4,23 +4,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.zIndex
@@ -28,13 +23,16 @@ import entities.Card
 import seeder.seed
 import kotlin.math.roundToInt
 
+
+internal val playerBattlefield = mutableListOf<Card>()
+
 @Composable
 @Preview
 fun App(deck: List<Card>) {
     val (playerDeck, opponentDeck) = deck.chunked(10)
 
     var canPlay by rememberSaveable { mutableStateOf(true) }
-    val playerHand by rememberSaveable { mutableStateOf(playerDeck.take(5)) }
+    var playerHand by rememberSaveable { mutableStateOf(playerDeck.take(5)) }
     var opponenthand by rememberSaveable { mutableStateOf(opponentDeck.take(5)) }
 
     MaterialTheme {
@@ -42,7 +40,9 @@ fun App(deck: List<Card>) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Battlefield()
+            Battlefield(
+                onPlayChange = { canPlay = it }
+            )
             Spacer(
                 modifier = Modifier.height(16.dp)
             )
@@ -67,8 +67,6 @@ fun PlayerHand(
     var sizeHand by remember { mutableStateOf(Offset.Zero) }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .border(
                 width = 10.dp,
@@ -77,9 +75,6 @@ fun PlayerHand(
                 ),
                 color = Color.Red
             )
-
-            .width(800.dp)
-            .height(700.dp)
             .onGloballyPositioned { layoutCoordinates ->
                 positionHand = layoutCoordinates.positionInRoot()
                 sizeHand = Offset(
@@ -111,6 +106,7 @@ fun PlayerCard(
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
+    var isPlayed by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -118,13 +114,7 @@ fun PlayerCard(
             .size(100.dp, 150.dp)
             .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
             .background(Color.White, RoundedCornerShape(8.dp))
-            .border(
-                color = Color.Blue,
-                width = 5.dp,
-                shape = RoundedCornerShape(
-                    size = 5.dp
-                )
-            )
+            .border(width = 1.dp, color = if (canPlay) Color.Blue else Color.Red)
             .onGloballyPositioned { layoutCoordinates ->
                 cardPosition = layoutCoordinates.positionInRoot()
                 cardSize = Offset(
@@ -139,7 +129,8 @@ fun PlayerCard(
                             val isOutsideParent = cardPosition.y < handPosition.y
                             if (isOutsideParent) {
                                 onPlayChange(false)
-                                addToBattlefield(card = card)
+                                isPlayed = true
+                                playerBattlefield.add(card)
                             } else {
                                 offset = Offset(x = 0f, y = 0f)
                             }
@@ -147,69 +138,53 @@ fun PlayerCard(
                     ) { change, dragAmount ->
                         offset = Offset(offset.x + dragAmount.x, offset.y + dragAmount.y)
                         change.consume()
-
-                        val isOutsideParent = cardPosition.y < handPosition.y
-                        if (isOutsideParent) {
-                            println("Card is outside the parent")
-                        } else {
-                            println("Card is inside the parent")
-                        }
-
                     }
                 }
             }
     ) {
-        Column(modifier = Modifier.padding(10.dp)) {
-            Text(
-                text = card.name,
-                style = LocalTextStyle.current.merge(
-                    TextStyle(
-                        lineHeight = 2.5.em,
-                        lineHeightStyle = LineHeightStyle(
-                            alignment = LineHeightStyle.Alignment.Center,
-                            trim = LineHeightStyle.Trim.None
-                        )
+        Column {
+            Row {
+                Column {
+                    Text(
+                        text = card.name,
+                        color = Color.Black,
                     )
-                )
-            )
-            Text(
-                text = if(canPlay) "playable" else "not playable"
-            )
+                }
+                Column {
+                    Badge(
+                        backgroundColor = Color.Cyan
+                    ) {
+                        Text(
+                            text = card.strength.toString(),
+                            color = Color.White,
+                        )
+                    }
+                }
+            }
+            Row {
+                Button(
+                    onClick = { },
+                    enabled = isPlayed
+                ) {
+                    Text("asd")
+                }
+            }
+
         }
-
-
     }
+
 }
 
 @Composable
-fun PlayerBattlefield(){
-    Row {
-
-    }
-}
-
-@Composable
-fun Battlefield() {
-    Column(
+fun Battlefield(onPlayChange: (Boolean) -> Unit) {
+    Box(
         modifier = Modifier
             .background(Color.Green.copy(alpha = 0.5f))
             .height(300.dp)
             .width(600.dp)
-            .zIndex(-1f),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Row {
+            .zIndex(-1f)
 
-        }
-        Row {
-            PlayerBattlefield()
-        }
-    }
-}
-
-private fun addToBattlefield(card: Card){
-
+    )
 }
 
 fun main() = application {
