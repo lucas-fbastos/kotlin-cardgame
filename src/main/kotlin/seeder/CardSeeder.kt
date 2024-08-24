@@ -7,7 +7,10 @@ fun seed(): List<Card> {
     val axolotlHealer = Card(
         name = "Axolotl Healer",
         strength = 4,
-        keywords = mapOf("POISONOUS" to Poisonous())
+        keywords = mapOf(
+            "POISONOUS" to Poisonous(),
+            ),
+        flavorText = "flavor text for the card"
     )
     val testCard = Card(
         name = "test",
@@ -16,9 +19,9 @@ fun seed(): List<Card> {
     )
 
     return listOf(
-        axolotlHealer,axolotlHealer,testCard,testCard,testCard,
-        axolotlHealer,testCard,axolotlHealer,testCard,testCard,
-        axolotlHealer,axolotlHealer,testCard,testCard,testCard,
-        axolotlHealer,testCard,axolotlHealer,testCard,testCard,
+        axolotlHealer, axolotlHealer, testCard, testCard, testCard,
+        axolotlHealer, testCard, axolotlHealer, testCard, testCard,
+        axolotlHealer, axolotlHealer, testCard, testCard, testCard,
+        axolotlHealer, testCard, axolotlHealer, testCard, testCard,
     )
 }

@@ -10,12 +10,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -70,6 +72,8 @@ fun PlayerHand(
 
     Row(
         modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
             .border(
                 width = 10.dp,
                 shape = RoundedCornerShape(
@@ -84,6 +88,7 @@ fun PlayerHand(
                     layoutCoordinates.size.height.toFloat()
                 )
             },
+        verticalAlignment = Alignment.CenterVertically
     ) {
         key(positionHand, sizeHand) {
             cards.forEach { card ->
@@ -113,9 +118,12 @@ fun PlayerCard(
     Box(
         modifier = Modifier
             .padding(5.dp)
-            .size(100.dp, 150.dp)
+            .size(
+                width = 150.dp,
+                height = 250.dp
+            )
             .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
-            .background(Color.White, RoundedCornerShape(8.dp))
+            .background(Color.LightGray, RoundedCornerShape(8.dp))
             .border(width = 1.dp, color = if (canPlay) Color.Blue else Color.Red)
             .onGloballyPositioned { layoutCoordinates ->
                 cardPosition = layoutCoordinates.positionInRoot()
@@ -137,19 +145,27 @@ fun PlayerCard(
                                 offset = Offset(x = 0f, y = 0f)
                             }
                         },
-                    ) { change, dragAmount ->
-                        offset = Offset(offset.x + dragAmount.x, offset.y + dragAmount.y)
-                        change.consume()
-                    }
+                        onDrag = { change, dragAmount ->
+                            offset = Offset(
+                                x = offset.x + dragAmount.x,
+                                y = offset.y + dragAmount.y
+                            )
+                            change.consume()
+                        }
+                    )
                 }
             }
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(10.dp)
+        ) {
             Row {
                 Column {
                     Text(
                         text = card.name,
                         color = Color.Black,
+                        textAlign = TextAlign.Center
                     )
                 }
                 Column {
@@ -163,13 +179,23 @@ fun PlayerCard(
                     }
                 }
             }
-            Row {
-                Button(
-                    onClick = { },
-                    enabled = isPlayed
-                ) {
-                    Text("asd")
+            card.flavorText?.let {
+                Column {
+                    Text(
+                        text = it,
+                        color = Color.Black,
+                        textAlign = TextAlign.Justify
+                    )
                 }
+            }
+            Row {
+                if (isPlayed)
+                    Button(
+                        onClick = { },
+                        enabled = canPlay
+                    ) {
+                        Text("Attack")
+                    }
             }
 
         }
@@ -191,7 +217,12 @@ fun Battlefield(onPlayChange: (Boolean) -> Unit) {
 
 fun main() = application {
     val cards = seed()
-    Window(onCloseRequest = ::exitApplication) {
-        App(deck = cards)
+    Window(
+        onCloseRequest = ::exitApplication,
+        resizable = false
+        ) {
+        App(
+            deck = cards
+        )
     }
 }
