@@ -39,12 +39,13 @@ fun PlayerCard(
     canPlay: Boolean,
     onPlayChange: (Boolean) -> Unit,
     handPosition: Offset,
+    arena: MutableList<Card>,
+    hand: MutableList<Card>,
 ) {
     var offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
     var isPlayed by remember { mutableStateOf(false) }
-    val playerBattlefield = mutableListOf<Card>()
     Box(modifier = Modifier
         .padding(5.dp)
         .size(
@@ -79,7 +80,9 @@ fun PlayerCard(
                         if (isOutsideParent) {
                             onPlayChange(false)
                             isPlayed = true
-                            playerBattlefield.add(card)
+                            hand.remove(card)
+                            arena.add(card)
+
                         } else {
                             offset = Offset(
                                 x = 0f,
