@@ -1,12 +1,15 @@
 ### TODO LIST 
 
+- implement a way of handling turn beginning and turn ending
+- create component for opponent hand
+- create area for opponent arena inside battlefield
+- display player hp
+- display player mindbugs
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
 - create mechanic to start battle
-- create
 - create how to select defender
 - create mechanic to end turn and start opponent turn
 - mechanic to sort deck 
-- create mechanic to attack or play card
 - create how to select attacker 
 
 ###  DONE
