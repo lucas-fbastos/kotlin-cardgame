@@ -1,42 +1,39 @@
+@file:Suppress("FunctionName")
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Badge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import androidx.compose.ui.zIndex
+import androidx.compose.ui.window.rememberWindowState
+import components.Battlefield
+import components.PlayerHand
 import entities.Card
 import seeder.seed
-import kotlin.math.roundToInt
-
-
-internal val playerBattlefield = mutableListOf<Card>()
 
 @Composable
 @Preview
 fun App(deck: List<Card>) {
     val (playerDeck, opponentDeck) = deck.chunked(10)
-
+    var turn by rememberSaveable{mutableStateOf(1)}
     var canPlay by rememberSaveable { mutableStateOf(true) }
-    var playerHand by rememberSaveable { mutableStateOf(playerDeck.take(5)) }
+    val playerHand by rememberSaveable { mutableStateOf(playerDeck.take(5)) }
     var opponenthand by rememberSaveable { mutableStateOf(opponentDeck.take(5)) }
 
     MaterialTheme {
@@ -44,6 +41,22 @@ fun App(deck: List<Card>) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Row {
+                Text("DEBUG MENU ")
+                Button(
+                    onClick = {
+                        canPlay = !canPlay
+                        turn = turn.inc()
+                    },
+                    modifier = Modifier.padding(vertical = 20.dp)
+                ) {
+                    Text("change turn")
+                }
+            }
+            Text(
+                text = "TURN: $turn",
+                modifier = Modifier.size(100.dp)
+            )
             Battlefield(
                 onPlayChange = { canPlay = it }
             )
@@ -61,166 +74,14 @@ fun App(deck: List<Card>) {
     }
 }
 
-@Composable
-fun PlayerHand(
-    canPlay: Boolean,
-    onPlayChange: (Boolean) -> Unit,
-    cards: List<Card>,
-) {
-    var positionHand by remember { mutableStateOf(Offset.Zero) }
-    var sizeHand by remember { mutableStateOf(Offset.Zero) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .border(
-                width = 10.dp,
-                shape = RoundedCornerShape(
-                    size = 5.dp
-                ),
-                color = Color.Red
-            )
-            .onGloballyPositioned { layoutCoordinates ->
-                positionHand = layoutCoordinates.positionInRoot()
-                sizeHand = Offset(
-                    layoutCoordinates.size.width.toFloat(),
-                    layoutCoordinates.size.height.toFloat()
-                )
-            },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        key(positionHand, sizeHand) {
-            cards.forEach { card ->
-                PlayerCard(
-                    canPlay = canPlay,
-                    onPlayChange = onPlayChange,
-                    handPosition = positionHand,
-                    card = card,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun PlayerCard(
-    card: Card,
-    canPlay: Boolean,
-    onPlayChange: (Boolean) -> Unit,
-    handPosition: Offset,
-) {
-    var offset by remember { mutableStateOf(Offset(0f, 0f)) }
-    var cardPosition by remember { mutableStateOf(Offset.Zero) }
-    var cardSize by remember { mutableStateOf(Offset.Zero) }
-    var isPlayed by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .padding(5.dp)
-            .size(
-                width = 150.dp,
-                height = 250.dp
-            )
-            .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
-            .background(Color.LightGray, RoundedCornerShape(8.dp))
-            .border(width = 1.dp, color = if (canPlay) Color.Blue else Color.Red)
-            .onGloballyPositioned { layoutCoordinates ->
-                cardPosition = layoutCoordinates.positionInRoot()
-                cardSize = Offset(
-                    layoutCoordinates.size.width.toFloat(),
-                    layoutCoordinates.size.height.toFloat()
-                )
-            }
-            .pointerInput(canPlay) {
-                if (canPlay) {
-                    detectDragGestures(
-                        onDragEnd = {
-                            val isOutsideParent = cardPosition.y < handPosition.y
-                            if (isOutsideParent) {
-                                onPlayChange(false)
-                                isPlayed = true
-                                playerBattlefield.add(card)
-                            } else {
-                                offset = Offset(x = 0f, y = 0f)
-                            }
-                        },
-                        onDrag = { change, dragAmount ->
-                            offset = Offset(
-                                x = offset.x + dragAmount.x,
-                                y = offset.y + dragAmount.y
-                            )
-                            change.consume()
-                        }
-                    )
-                }
-            }
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            Row {
-                Column {
-                    Text(
-                        text = card.name,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Column {
-                    Badge(
-                        backgroundColor = Color.Cyan
-                    ) {
-                        Text(
-                            text = card.strength.toString(),
-                            color = Color.White,
-                        )
-                    }
-                }
-            }
-            card.flavorText?.let {
-                Column {
-                    Text(
-                        text = it,
-                        color = Color.Black,
-                        textAlign = TextAlign.Justify
-                    )
-                }
-            }
-            Row {
-                if (isPlayed)
-                    Button(
-                        onClick = { },
-                        enabled = canPlay
-                    ) {
-                        Text("Attack")
-                    }
-            }
-
-        }
-    }
-
-}
-
-@Composable
-fun Battlefield(onPlayChange: (Boolean) -> Unit) {
-    Box(
-        modifier = Modifier
-            .background(Color.Green.copy(alpha = 0.5f))
-            .height(300.dp)
-            .width(600.dp)
-            .zIndex(-1f)
-
-    )
-}
-
 fun main() = application {
     val cards = seed()
     Window(
         onCloseRequest = ::exitApplication,
-        resizable = false
-        ) {
+        resizable = false,
+        state = rememberWindowState(width = Dp.Unspecified, height = Dp.Unspecified),
+        title = "MindBug",
+    ) {
         App(
             deck = cards
         )
