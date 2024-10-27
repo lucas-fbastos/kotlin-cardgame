@@ -17,13 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
-import entities.Card
+import entities.Player
 
 @Composable
 fun PlayerHand(
+    player: Player,
     canPlay: Boolean,
     onPlayChange: (Boolean) -> Unit,
-    cards: List<Card>,
 ) {
     var positionHand by remember { mutableStateOf(Offset.Zero) }
     var sizeHand by remember { mutableStateOf(Offset.Zero) }
@@ -47,12 +47,14 @@ fun PlayerHand(
         verticalAlignment = Alignment.CenterVertically
     ) {
         key(positionHand, sizeHand) {
-            cards.forEach { card ->
+            player.hand.forEach { card ->
                 PlayerCard(
                     canPlay = canPlay,
                     onPlayChange = onPlayChange,
                     handPosition = positionHand,
                     card = card,
+                    arena = player.arena,
+                    hand = player.hand,
                 )
             }
         }
