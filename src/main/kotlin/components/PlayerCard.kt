@@ -82,7 +82,6 @@ fun PlayerCard(
                             isPlayed = true
                             hand.remove(card)
                             arena.add(card)
-
                         } else {
                             offset = Offset(
                                 x = 0f,

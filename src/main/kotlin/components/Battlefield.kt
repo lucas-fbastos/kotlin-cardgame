@@ -35,6 +35,7 @@ import kotlin.math.roundToInt
 fun Battlefield(
     onPlayChange: (Boolean) -> Unit,
     playerArena: MutableList<Card>,
+    opponentArena: MutableList<Card>,
 ) {
     Box(
         modifier = Modifier
@@ -46,6 +47,15 @@ fun Battlefield(
             .zIndex(-1f)
 
     ) {
+        Row {
+            opponentArena.forEach { card: Card ->
+                Column {
+                    ArenaCard(
+                        card = card
+                    )
+                }
+            }
+        }
         Row {
             playerArena.forEach { card ->
                 Column {
