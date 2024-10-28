@@ -5,8 +5,8 @@ import constants.SNEAKY
 class Opponent(
     deck: List<Card>,
     hand: MutableList<Card>,
-    discardPile: MutableList<Card>,
-    arena: MutableList<Card>,
+    discardPile: MutableList<Card> = mutableListOf(),
+    arena: MutableList<Card> = mutableListOf(),
 ) : Player(
     deck = deck,
     hand = hand,

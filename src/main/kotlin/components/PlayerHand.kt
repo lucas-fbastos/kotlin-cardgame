@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -30,18 +31,39 @@ fun PlayerHand(
 
     Row(
         modifier = Modifier
+            .height(20.dp)
+    ) {
+        Text(
+            text = "Health: ${player.lifePoints}",
+            color = Color.Red
+        )
+    }
+    Row {
+        Text(
+            text = "Mindbugs: ${player.amountOfMindBugs}",
+            color = Color.Black
+        )
+    }
+    Row {
+        Text(
+            text = "Cards: ${player.deck.size}",
+            color = Color.Black
+        )
+    }
+    Row(
+        modifier = Modifier
             .height(300.dp)
             .border(
-                width = 10.dp,
+                width = 5.dp,
                 shape = RoundedCornerShape(
                     size = 5.dp
                 ),
-            color = Color.Red
+                color = Color.Red
             ).onGloballyPositioned { layoutCoordinates ->
                 positionHand = layoutCoordinates.positionInRoot()
                 sizeHand = Offset(
-                   x =  layoutCoordinates.size.width.toFloat(),
-                   y = layoutCoordinates.size.height.toFloat()
+                    x = layoutCoordinates.size.width.toFloat(),
+                    y = layoutCoordinates.size.height.toFloat()
                 )
             },
         verticalAlignment = Alignment.CenterVertically

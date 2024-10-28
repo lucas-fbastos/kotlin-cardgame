@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,31 +22,38 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import components.Battlefield
+import components.OpponentHand
 import components.PlayerHand
-import entities.Card
+import entities.Opponent
 import entities.Player
 import seeder.seed
 
 @Composable
 @Preview
-fun App(deck: List<Card>) {
-    val (playerDeck, opponentDeck) = deck.chunked(10)
+fun App() {
+    val (playerCards, opponentCards, playerHand, opponentHand) = seed()
+        .chunked(size = 5)
+        .toMutableList()
     var turn: Int by rememberSaveable { mutableStateOf(1) }
     var canPlay: Boolean by rememberSaveable { mutableStateOf(true) }
-    var opponenthand: MutableList<Card> by rememberSaveable {
+    val opponent: Opponent by rememberSaveable {
         mutableStateOf(
-            opponentDeck.take(5).toMutableStateList()
-        )
-    }
-    val player: Player by rememberSaveable {
-        mutableStateOf(
-            Player(
-                hand = playerDeck
-                    .take(5)
-                    .toMutableList()
+            Opponent(
+                deck = opponentCards,
+                hand = opponentHand.toMutableList(),
             )
         )
     }
+
+    val player: Player by rememberSaveable {
+        mutableStateOf(
+            Player(
+                hand = playerHand.toMutableList(),
+                deck = playerCards
+            )
+        )
+    }
+
     MaterialTheme {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -66,17 +71,21 @@ fun App(deck: List<Card>) {
                     Text("change turn")
                 }
             }
-            Text(
-                text = "TURN: $turn",
-                modifier = Modifier.size(100.dp)
-            )
+
+            Text(text = "TURN: $turn")
+
+            OpponentHand(opponent = opponent)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Battlefield(
                 onPlayChange = { canPlay = it },
-                playerArena = player.arena
+                playerArena = player.arena,
+                opponentArena = opponent.arena
             )
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             PlayerHand(
                 player = player,
                 canPlay = canPlay,
@@ -89,15 +98,12 @@ fun App(deck: List<Card>) {
 }
 
 fun main() = application {
-    val cards = seed()
     Window(
         onCloseRequest = ::exitApplication,
-        resizable = false,
+        resizable = true,
         state = rememberWindowState(width = Dp.Unspecified, height = Dp.Unspecified),
         title = "MindBug",
     ) {
-        App(
-            deck = cards
-        )
+        App()
     }
 }
