@@ -1,12 +1,14 @@
 package entities
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import constants.SNEAKY
 
 class Opponent(
-    deck: List<Card>,
-    hand: MutableList<Card>,
-    discardPile: MutableList<Card> = mutableListOf(),
-    arena: MutableList<Card> = mutableListOf(),
+    deck: MutableState<MutableList<Card>>,
+    hand: MutableState<MutableList<Card>>,
+    discardPile: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
+    arena: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
 ) : Player(
     deck = deck,
     hand = hand,
@@ -15,18 +17,19 @@ class Opponent(
 ) {
 
     private fun getBigCards(): List<Card> =
-        hand.filter { card ->
-            card.strength > 5 || card.keywords?.size!! > 1
+        hand.value.filter { card ->
+            card.strength > 5 || card.keywords?.any() == true
         }
 
 
     private fun enemyHasDefence(player: Player): Boolean {
 
         var hasDefence = player.arena
+            .value
             .any { card ->
-                card.strength >= arena
-                    .maxBy { opponentCard -> opponentCard.strength }
-                    .strength
+                card.strength >= (this.arena.value
+                    .maxByOrNull { opponentCard -> opponentCard.strength }
+                    ?.strength ?: 0)
             }
         val sneaky = checkSneaky()
         val playerSneaky = player.checkSneaky()
@@ -36,24 +39,23 @@ class Opponent(
     }
 
     fun act(player: Player) {
-        if (enemyHasDefence(player) && hand.size > 0)
+        println("ACT!!!!")
+        if (enemyHasDefence(player) && hand.value.size > 0)
             playCard(
-                card = selectCardToPlay(
-                    player = player
-                )
+                card = selectCardToPlay(player = player)
             )
         else
             attack()
     }
 
     private fun attack() {
-
+        println("ATTACK!!!!")
     }
 
     private fun selectCardToPlay(player: Player): Card {
         val bigCards = getBigCards()
         return if (player.checkSneaky()) {
-            hand.first {
+            this.hand.value.first {
                 it.keywords?.containsKey(SNEAKY) == true &&
                         it.strength >= player.getStrongestSneaky().strength
             }
@@ -61,20 +63,24 @@ class Opponent(
             if (bigCards.isNotEmpty() && !player.hasMindBugs())
                 bigCards.maxBy { it.strength }
             else
-                hand.first { it.strength <= 5 }
+                this.hand.value.firstOrNull { it.strength <= 5 } ?: this.hand.value.first()
         }
     }
 
     private fun playCard(card: Card) {
-        hand.remove(card)
-        arena.add(card)
+        hand.value = hand.value.toMutableList().apply { remove(card) }
+
+        // Assign a new list instance to arena.value with the added card
+        arena.value = arena.value.toMutableList().apply { add(card) }
     }
 }
 
-fun Player.checkSneaky() = this.arena.firstOrNull { card -> card.keywords?.containsKey("SNEAKY") == true }?.let { true } ?: false
+fun Player.checkSneaky() =
+    this.arena.value.firstOrNull { card -> card.keywords?.containsKey("SNEAKY") == true }?.let { true } ?: false
+
 fun Player.hasMindBugs() = this.amountOfMindBugs > 0
 fun Player.getStrongestSneaky() = this.arena
-    .filter { card ->
+    .value.filter { card ->
         card.keywords
             ?.containsKey("SNEAKY") == true
     }

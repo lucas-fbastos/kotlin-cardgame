@@ -1,9 +1,6 @@
 package components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,33 +19,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import endTurn
 import entities.Card
-import entities.Opponent
-import entities.Player
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlayerCard(
+fun ArenaCard(
     card: Card,
-    canPlay: Boolean,
-    onPlayChange: (Boolean) -> Unit,
-    handPosition: Offset,
-    player: Player,
-    opponent: Opponent,
 ) {
-    var offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
+    val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
-    var isPlayed by remember { mutableStateOf(false) }
+
     Box(modifier = Modifier
         .padding(5.dp)
         .size(
@@ -65,47 +52,12 @@ fun PlayerCard(
             color = Color.LightGray,
             shape = RoundedCornerShape(8.dp)
         )
-        .border(
-            width = 1.dp,
-            color = if (canPlay) Color.Blue else Color.Red
-        )
         .onGloballyPositioned { layoutCoordinates ->
             cardPosition = layoutCoordinates.positionInRoot()
             cardSize = Offset(
                 x = layoutCoordinates.size.width.toFloat(),
                 y = layoutCoordinates.size.height.toFloat()
             )
-        }.pointerInput(canPlay) {
-            if (canPlay) {
-                detectDragGestures(
-                    onDragEnd = {
-                        val isOutsideParent = cardPosition.y < handPosition.y
-                        if (isOutsideParent) {
-                            onPlayChange(false)
-                            isPlayed = true
-                            player.hand.value.apply { remove(card) }
-                            player.arena.value.apply { add(card) }
-                            endTurn(
-                                player = player,
-                                opponent = opponent,
-                                wasPlayerTurn = true,
-                                onPlayChange = onPlayChange,
-                            )
-                        } else {
-                            offset = Offset(
-                                x = 0f,
-                                y = 0f
-                            )
-                        }
-                    },
-                    onDrag = { dragAmount ->
-                        offset = Offset(
-                            x = offset.x + dragAmount.x,
-                            y = offset.y + dragAmount.y
-                        ).takeIf { !isPlayed } ?: offset
-                    }
-                )
-            }
         }
     ) {
         Column(
@@ -140,9 +92,9 @@ fun PlayerCard(
                 }
             }
             Row {
-                if (isPlayed) Button(
+                Button(
                     onClick = { },
-                    enabled = canPlay
+                    enabled = true
                 ) {
                     Text("Attack")
                 }
