@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -39,8 +41,8 @@ fun App() {
     val opponent: Opponent by rememberSaveable {
         mutableStateOf(
             Opponent(
-                deck = opponentCards,
-                hand = opponentHand.toMutableList(),
+                deck = mutableStateOf(opponentCards.toMutableList()),
+                hand = mutableStateOf(opponentHand.toMutableList()),
             )
         )
     }
@@ -48,15 +50,17 @@ fun App() {
     val player: Player by rememberSaveable {
         mutableStateOf(
             Player(
-                hand = playerHand.toMutableList(),
-                deck = playerCards
+                hand = mutableStateOf(playerHand.toMutableList()),
+                deck = mutableStateOf(playerCards.toMutableList())
             )
         )
     }
 
     MaterialTheme {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row {
@@ -79,19 +83,20 @@ fun App() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Battlefield(
-                onPlayChange = { canPlay = it },
-                playerArena = player.arena,
-                opponentArena = opponent.arena
+                player = player,
+                opponent = opponent,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             PlayerHand(
                 player = player,
+                opponent = opponent,
                 canPlay = canPlay,
                 onPlayChange = {
+                    if(canPlay) turn +=1
                     canPlay = it
-                }
+                },
             )
         }
     }
@@ -106,4 +111,18 @@ fun main() = application {
     ) {
         App()
     }
+}
+
+
+fun endTurn(
+    opponent: Opponent,
+    player: Player,
+    wasPlayerTurn: Boolean,
+    onPlayChange: (Boolean) -> Unit,
+) {
+    if (wasPlayerTurn)
+        onPlayChange(false).run {
+            opponent.act(player = player)
+        }
+    onPlayChange(true)
 }

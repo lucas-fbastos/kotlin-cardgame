@@ -30,7 +30,13 @@ fun OpponentHand(
     }
     Row {
         Text(
-            text = "Cards: ${opponent.deck.size}",
+            text = "Cards: ${opponent.deck.value.size}",
+            color = Color.Black
+        )
+    }
+    Row {
+        Text(
+            text = "Arena: ${opponent.arena.value.size}",
             color = Color.Black
         )
     }
@@ -40,12 +46,8 @@ fun OpponentHand(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        opponent.hand.forEach { card ->
-            OpponentCard(
-                card = card,
-                arena = opponent.arena,
-                hand = opponent.hand,
-            )
+        opponent.hand.value.forEach { _ ->
+            OpponentCard()
         }
     }
 }

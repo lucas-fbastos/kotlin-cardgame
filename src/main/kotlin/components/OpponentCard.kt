@@ -9,13 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import entities.Card
+
 @Composable
-fun OpponentCard(
-    card: Card,
-    arena: MutableList<Card>,
-    hand: MutableList<Card>,
-) {
+fun OpponentCard() {
 
     Box(modifier = Modifier
         .padding(5.dp)

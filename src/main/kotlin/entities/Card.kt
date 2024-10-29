@@ -3,7 +3,7 @@ package entities
 import constants.POISONOUS
 import constants.TOUGH
 
-class Card(
+data class Card(
     val name: String,
     val strength: Int,
     val flavorText: String? = null,
@@ -54,33 +54,6 @@ class Card(
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Card
-
-        if (name != other.name) return false
-        if (strength != other.strength) return false
-        if (flavorText != other.flavorText) return false
-        if (keywords != other.keywords) return false
-        if (ability != other.ability) return false
-        if (alive != other.alive) return false
-        if (resistance != other.resistance) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = name.hashCode()
-        result = 31 * result + strength
-        result = 31 * result + (flavorText?.hashCode() ?: 0)
-        result = 31 * result + (keywords?.hashCode() ?: 0)
-        result = 31 * result + (ability?.hashCode() ?: 0)
-        result = 31 * result + alive.hashCode()
-        result = 31 * result + resistance.hashCode()
-        return result
-    }
 }
 
 interface Keyword {

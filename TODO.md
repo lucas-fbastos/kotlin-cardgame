@@ -1,16 +1,11 @@
 ### TODO LIST 
 
-- implement a way of handling turn beginning and turn ending
-- create component for opponent hand
-- create area for opponent arena inside battlefield
-- display player hp
-- display player mindbugs
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
 - create mechanic to start battle
 - create how to select defender
 - create mechanic to end turn and start opponent turn
-- mechanic to sort deck 
 - create how to select attacker 
+- implement buy card
 
 ###  DONE
 - player basics
@@ -24,3 +19,10 @@
 - pass card from hand to battlefield (on drop move card to battlefield) 
 - fixed player hand size
 - fixed battlefield size
+- create component for opponent hand
+- create area for opponent arena inside battlefield
+- display player hp
+- display player mindbugs
+- implement a way of updating the opponent
+- implement a way of handling turn beginning and turn ending
+- mechanic to sort deck 
