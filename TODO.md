@@ -6,6 +6,7 @@
 - create mechanic to end turn and start opponent turn
 - create how to select attacker 
 - implement buy card
+- initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
 
 ###  DONE
 - player basics
