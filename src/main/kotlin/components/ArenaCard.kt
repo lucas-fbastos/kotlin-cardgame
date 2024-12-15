@@ -91,12 +91,14 @@ fun ArenaCard(
                     )
                 }
             }
-            Row {
-                Button(
-                    onClick = { },
-                    enabled = true
-                ) {
-                    Text("Attack")
+            if (card.playerOwned) {
+                Row {
+                    Button(
+                        onClick = { },
+                        enabled = true
+                    ) {
+                        Text("Attack")
+                    }
                 }
             }
         }

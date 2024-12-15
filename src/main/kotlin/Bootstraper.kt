@@ -26,6 +26,7 @@ import androidx.compose.ui.window.rememberWindowState
 import components.Battlefield
 import components.OpponentHand
 import components.PlayerHand
+import entities.Card
 import entities.Opponent
 import entities.Player
 import seeder.seed
@@ -41,8 +42,8 @@ fun App() {
     val opponent: Opponent by rememberSaveable {
         mutableStateOf(
             Opponent(
-                deck = mutableStateOf(opponentCards.toMutableList()),
-                hand = mutableStateOf(opponentHand.toMutableList()),
+                deck = mutableStateOf(opponentCards.toOpponentCard()),
+                hand = mutableStateOf(opponentHand.toOpponentCard()),
             )
         )
     }
@@ -94,7 +95,7 @@ fun App() {
                 opponent = opponent,
                 canPlay = canPlay,
                 onPlayChange = {
-                    if(canPlay) turn +=1
+                    if (canPlay) turn += 1
                     canPlay = it
                 },
             )
@@ -126,3 +127,8 @@ fun endTurn(
         }
     onPlayChange(true)
 }
+
+private fun List<Card>.toOpponentCard() =
+    this.map {
+        it.copy(playerOwned = false)
+    }.toMutableList()

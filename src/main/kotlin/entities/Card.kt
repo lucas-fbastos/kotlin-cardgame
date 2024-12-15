@@ -10,6 +10,7 @@ data class Card(
     val keywords: Map<String, Keyword>?,
     val ability: Ability? = null,
     var alive: Boolean = true,
+    var playerOwned: Boolean = true,
     var resistance: Boolean = false
 ) {
 

@@ -60,13 +60,13 @@ fun PlayerHand(
     }
     Row(
         modifier = Modifier
-            .height(300.dp)
+            .height(400.dp)
             .border(
                 width = 5.dp,
                 shape = RoundedCornerShape(
                     size = 5.dp
                 ),
-                color = Color.Red
+                color = Color.Transparent
             ).onGloballyPositioned { layoutCoordinates ->
                 positionHand = layoutCoordinates.positionInRoot()
                 sizeHand = Offset(
