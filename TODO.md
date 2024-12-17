@@ -1,12 +1,15 @@
-### TODO LIST 
-
+### TODO LIST
+- implement discard pile
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
-- create mechanic to start battle
-- create how to select defender
-- create mechanic to end turn and start opponent turn
-- create how to select attacker 
-- implement buy card
+- create how to select defender (player and opponent side)
+- create how to select attacker (player side)
+- implement buy card (player and opponent side)
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
+- implement delays for opponent action (attack and play card)
+- improve logging when cards battle
+- create refined strategy for opponent to check cards before selecting the attacker 
+- add animations to play card and attack card (opponent and player)
+- add life bar for opponent and player
 
 ###  DONE
 - player basics
@@ -27,3 +30,6 @@
 - implement a way of updating the opponent
 - implement a way of handling turn beginning and turn ending
 - mechanic to sort deck 
+- create mechanic to start battle
+- implemented opponent attack 
+- create mechanic to end turn and start opponent turn

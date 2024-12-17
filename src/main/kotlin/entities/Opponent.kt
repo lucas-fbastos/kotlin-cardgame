@@ -16,11 +16,10 @@ class Opponent(
     arena = arena,
 ) {
 
-    private fun getBigCards(): List<Card> =
-        hand.value.filter { card ->
-            card.strength > 5 || card.keywords?.any() == true
+    private fun getDeadlyCard(): Card? =
+        hand.value.firstOrNull { card ->
+            card.strength > 5 || card.keywords.any()
         }
-
 
     private fun enemyHasDefence(player: Player): Boolean {
 
@@ -45,27 +44,47 @@ class Opponent(
                 card = selectCardToPlay(player = player)
             )
         else
-            attack()
+            attack(player = player)
     }
 
-    private fun attack() {
+    private fun attack(player: Player) {
         println("ATTACK!!!!")
+
+        val target: Card = chooseTarget(player.arena.value)
+        val attacker = getDeadlyCard() ?: getSmallCard()
+
+        attacker.battle(target)
+            .also {
+                if (!attacker.alive) arena.value = arena.value
+                    .toMutableList()
+                    .apply { remove(attacker) }
+                if (!target.alive) player.arena.value = player.arena.value
+                    .toMutableList()
+                    .apply { remove(target) }
+            }
+
     }
+
+    private fun chooseTarget(playerArena: List<Card>): Card =
+        playerArena.minBy { it.strength }
 
     private fun selectCardToPlay(player: Player): Card {
-        val bigCards = getBigCards()
         return if (player.checkSneaky()) {
-            this.hand.value.first {
-                it.keywords?.containsKey(SNEAKY) == true &&
+            hand.value.first {
+                it.keywords.containsKey(SNEAKY) &&
                         it.strength >= player.getStrongestSneaky().strength
             }
         } else {
-            if (bigCards.isNotEmpty() && !player.hasMindBugs())
-                bigCards.maxBy { it.strength }
-            else
-                this.hand.value.firstOrNull { it.strength <= 5 } ?: this.hand.value.first()
+            getDeadlyCard()
+                ?.takeIf { player.hasMindBugs() }
+                ?: getSmallCard()
         }
     }
+
+    private fun getSmallCard() : Card =
+        hand.value
+            .firstOrNull { it.strength <= 5 && it.keywords.isEmpty() }
+            ?: hand.value.maxBy { it.strength }
 
     private fun playCard(card: Card) {
         hand.value = hand.value.toMutableList().apply { remove(card) }
@@ -76,12 +95,13 @@ class Opponent(
 }
 
 fun Player.checkSneaky() =
-    this.arena.value.firstOrNull { card -> card.keywords?.containsKey("SNEAKY") == true }?.let { true } ?: false
+    this.arena.value.any { card -> card.keywords.containsKey(SNEAKY) }
 
 fun Player.hasMindBugs() = this.amountOfMindBugs > 0
+
 fun Player.getStrongestSneaky() = this.arena
     .value.filter { card ->
         card.keywords
-            ?.containsKey("SNEAKY") == true
+            .containsKey(SNEAKY)
     }
     .maxBy { it.strength }

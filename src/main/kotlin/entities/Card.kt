@@ -7,7 +7,7 @@ data class Card(
     val name: String,
     val strength: Int,
     val flavorText: String? = null,
-    val keywords: Map<String, Keyword>?,
+    val keywords: Map<String, Keyword>,
     val ability: Ability? = null,
     var alive: Boolean = true,
     var playerOwned: Boolean = true,
@@ -15,7 +15,7 @@ data class Card(
 ) {
 
     fun die() {
-        keywords?.get(TOUGH)
+        keywords[TOUGH]
             ?.resolve(target = null, self = this)
             ?: run {
                 alive = false
@@ -25,14 +25,14 @@ data class Card(
     fun battle(opponent: Card) {
         var hit = true
         var opponentHit = true
-        this.keywords?.get(POISONOUS)
+        this.keywords[POISONOUS]
             ?.resolve(
                 target = opponent,
                 self = this,
             )
             ?: run { hit = false }
 
-        opponent.keywords?.get(POISONOUS)
+        opponent.keywords[POISONOUS]
             ?.resolve(
                 target = this,
                 self = opponent,
