@@ -1,5 +1,6 @@
 package seeder
 
+import constants.POISONOUS
 import entities.Card
 import entities.Poisonous
 
@@ -8,14 +9,14 @@ fun seed(): List<Card> {
         name = "Axolotl Healer",
         strength = 4,
         keywords = mapOf(
-            "POISONOUS" to Poisonous(),
+            POISONOUS to Poisonous(),
             ),
         flavorText = "flavor text for the card"
     )
     val testCard = Card(
         name = "test",
         strength = 1,
-        keywords = null,
+        keywords = emptyMap(),
     )
 
     return listOf(
