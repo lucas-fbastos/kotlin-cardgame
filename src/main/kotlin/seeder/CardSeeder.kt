@@ -1,8 +1,10 @@
 package seeder
 
 import constants.POISONOUS
+import constants.SNEAKY
 import entities.Card
 import entities.Poisonous
+import entities.Sneaky
 
 fun seed(): List<Card> {
 
@@ -11,7 +13,7 @@ fun seed(): List<Card> {
         createRegularAnt(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
         createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
         createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAssassinHedgehog(),
-        createAssassinHedgehog(), createDeadlyHamster(),  createDeadlyHamster(), createDeadlyHamster(),
+        createAssassinHedgehog(), createDeadlyHamster(),  createPhoneStealerOtter(), createPhoneStealerOtter(),
     )
 }
 
@@ -34,4 +36,11 @@ private fun createAssassinHedgehog() : Card = Card(
     strength = 4,
     flavorText = "never lost a contract...",
     keywords = mapOf( POISONOUS to Poisonous())
+)
+
+private fun createPhoneStealerOtter() : Card = Card(
+    name = "Phone Stealer Otter",
+    strength = 3,
+    flavorText = "Stay alert, check your purses - NOW!",
+    keywords = mapOf( SNEAKY to Sneaky() )
 )
