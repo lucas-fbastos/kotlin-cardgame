@@ -58,6 +58,12 @@ fun PlayerHand(
             color = Color.Black
         )
     }
+    Row {
+        Text(
+            text = "Graveyard: ${player.discardPile.value.size}",
+            color = Color.Black
+        )
+    }
     Row(
         modifier = Modifier
             .height(400.dp)

@@ -1,5 +1,4 @@
 ### TODO LIST
-- implement discard pile
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
 - create how to select defender (player and opponent side)
 - create how to select attacker (player side)
@@ -33,3 +32,6 @@
 - create mechanic to start battle
 - implemented opponent attack 
 - create mechanic to end turn and start opponent turn
+- implement discard pile
+- improved seeder
+- fixed attack killing all equal cards on the arena
