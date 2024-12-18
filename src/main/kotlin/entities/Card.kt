@@ -81,3 +81,7 @@ class Tough : Keyword {
         }
     }
 }
+
+class Sneaky : Keyword{
+    override fun resolve(target: Card?, self: Card) { }
+}
