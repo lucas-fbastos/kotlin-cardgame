@@ -5,24 +5,33 @@ import entities.Card
 import entities.Poisonous
 
 fun seed(): List<Card> {
-    val axolotlHealer = Card(
-        name = "Axolotl Healer",
-        strength = 4,
-        keywords = mapOf(
-            POISONOUS to Poisonous(),
-            ),
-        flavorText = "flavor text for the card"
-    )
-    val testCard = Card(
-        name = "test",
-        strength = 1,
-        keywords = emptyMap(),
-    )
 
     return listOf(
-        axolotlHealer, axolotlHealer, testCard, testCard, testCard,
-        axolotlHealer, testCard, axolotlHealer, testCard, testCard,
-        axolotlHealer, axolotlHealer, testCard, testCard, testCard,
-        axolotlHealer, testCard, axolotlHealer, testCard, testCard,
+        createRegularAnt(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
+        createRegularAnt(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
+        createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
+        createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAssassinHedgehog(),
+        createAssassinHedgehog(), createDeadlyHamster(),  createDeadlyHamster(), createDeadlyHamster(),
     )
 }
+
+private fun createRegularAnt(): Card = Card(
+    name = "Regular Ant",
+    strength = 1,
+    flavorText = "just an Ant",
+    keywords = mapOf()
+)
+
+private fun createDeadlyHamster() : Card = Card(
+    name = "Deadly Hamster",
+    strength = 5,
+    flavorText = "DANGEROUS CREATURE",
+    keywords = mapOf()
+)
+
+private fun createAssassinHedgehog() : Card = Card(
+    name = "Assassin Hedgehog",
+    strength = 4,
+    flavorText = "never lost a contract...",
+    keywords = mapOf( POISONOUS to Poisonous())
+)

@@ -3,6 +3,8 @@ package entities
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import constants.SNEAKY
+import helper.removeCardsFromBoard
+import java.lang.Thread.sleep
 
 class Opponent(
     deck: MutableState<MutableList<Card>>,
@@ -39,11 +41,12 @@ class Opponent(
 
     fun act(player: Player) {
         println("ACT!!!!")
-        if (enemyHasDefence(player) && hand.value.size > 0)
+        if (enemyHasDefence(player) && hand.value.size > 0){
+
             playCard(
                 card = selectCardToPlay(player = player)
             )
-        else
+        } else
             attack(player = player)
     }
 
@@ -55,14 +58,12 @@ class Opponent(
 
         attacker.battle(target)
             .also {
-                if (!attacker.alive) arena.value = arena.value
-                    .toMutableList()
-                    .apply { remove(attacker) }
-                if (!target.alive) player.arena.value = player.arena.value
-                    .toMutableList()
-                    .apply { remove(target) }
+                sleep(calculateDelay())
+                removeCardsFromBoard(
+                    opponent = this,
+                    player = player
+                )
             }
-
     }
 
     private fun chooseTarget(playerArena: List<Card>): Card =
@@ -88,7 +89,7 @@ class Opponent(
 
     private fun playCard(card: Card) {
         hand.value = hand.value.toMutableList().apply { remove(card) }
-
+        sleep(calculateDelay())
         // Assign a new list instance to arena.value with the added card
         arena.value = arena.value.toMutableList().apply { add(card) }
     }
@@ -105,3 +106,5 @@ fun Player.getStrongestSneaky() = this.arena
             .containsKey(SNEAKY)
     }
     .maxBy { it.strength }
+
+private val calculateDelay = {(180L..230L).random()}

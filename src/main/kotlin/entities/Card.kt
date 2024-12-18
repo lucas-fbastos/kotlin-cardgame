@@ -2,8 +2,10 @@ package entities
 
 import constants.POISONOUS
 import constants.TOUGH
+import java.util.UUID
 
 data class Card(
+    val id: UUID = UUID.randomUUID(),
     val name: String,
     val strength: Int,
     val flavorText: String? = null,
