@@ -83,8 +83,7 @@ fun PlayerCard(
                             val isOutsideParent = cardPosition.y < handPosition.y
                             if (isOutsideParent) {
                                 onPlayChange(false)
-                                player.hand.value.remove(card)
-                                player.arena.value.add(card)
+                                player.playCard(card = card)
                                 isPlayed = true
                                 endTurn(
                                     player = player,

@@ -87,12 +87,7 @@ class Opponent(
             .firstOrNull { it.strength <= 5 && it.keywords.isEmpty() }
             ?: hand.value.maxBy { it.strength }
 
-    private fun playCard(card: Card) {
-        hand.value = hand.value.toMutableList().apply { remove(card) }
-        sleep(calculateDelay())
-        // Assign a new list instance to arena.value with the added card
-        arena.value = arena.value.toMutableList().apply { add(card) }
-    }
+
 }
 
 fun Player.checkSneaky() =

@@ -20,7 +20,7 @@ fun Battlefield(
     player: Player,
     opponent: Opponent,
 ) {
-
+//OPPONENT AREA
     Box(
         modifier = Modifier
             .background(Color.Magenta.copy(alpha = 0.5f))
@@ -40,7 +40,7 @@ fun Battlefield(
             }
         }
     }
-
+//PLAYER AREA
     Box(
         modifier = Modifier
             .background(Color.Green.copy(alpha = 0.5f))
