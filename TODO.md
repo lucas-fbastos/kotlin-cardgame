@@ -7,7 +7,7 @@
 - implement delays for opponent action (attack and play card)
 - improve logging when cards battle
 - create refined strategy for opponent to check cards before selecting the attacker 
-- add animations to play card and attack card (opponent and player)
+- add animations to play card and attack card (opponent and player) play card animation can control the delay of the opponent action
 - add life bar for opponent and player
 
 ###  DONE

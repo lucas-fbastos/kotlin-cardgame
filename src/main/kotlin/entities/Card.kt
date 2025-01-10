@@ -1,6 +1,7 @@
 package entities
 
 import constants.POISONOUS
+import constants.SNEAKY
 import constants.TOUGH
 import java.util.UUID
 
@@ -13,7 +14,7 @@ data class Card(
     val ability: Ability? = null,
     var alive: Boolean = true,
     var playerOwned: Boolean = true,
-    var resistance: Boolean = false
+    var resistance: Boolean = false,
 ) {
 
     fun die() {
@@ -56,6 +57,11 @@ data class Card(
             }
         }
     }
+
+    fun canDefend(attacker: Card): Boolean = attacker.keywords[SNEAKY]
+        ?.let {
+            this.keywords.containsKey(SNEAKY)
+        } ?: true
 
 }
 

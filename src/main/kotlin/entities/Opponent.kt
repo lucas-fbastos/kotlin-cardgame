@@ -3,8 +3,6 @@ package entities
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import constants.SNEAKY
-import helper.removeCardsFromBoard
-import java.lang.Thread.sleep
 
 class Opponent(
     deck: MutableState<MutableList<Card>>,
@@ -52,18 +50,16 @@ class Opponent(
 
     private fun attack(player: Player) {
         println("ATTACK!!!!")
-
-        val target: Card = chooseTarget(player.arena.value)
-        val attacker = getDeadlyCard() ?: getSmallCard()
-
-        attacker.battle(target)
-            .also {
-                sleep(calculateDelay())
+        player.setDefendingState()
+           /* .also {
+                val target: Card = chooseTarget(player.arena.value)
+                val attacker = getDeadlyCard() ?: getSmallCard()
+                attacker.battle(target)
                 removeCardsFromBoard(
                     opponent = this,
                     player = player
-                )
-            }
+                )  <-- this will be done after the defender is selected
+            }  */
     }
 
     private fun chooseTarget(playerArena: List<Card>): Card =
@@ -101,5 +97,3 @@ fun Player.getStrongestSneaky() = this.arena
             .containsKey(SNEAKY)
     }
     .maxBy { it.strength }
-
-private val calculateDelay = {(180L..230L).random()}

@@ -34,7 +34,8 @@ fun Battlefield(
             opponent.arena.value.forEach { card: Card ->
                 Column {
                     ArenaCard(
-                        card = card
+                        card = card,
+                        isDefending = player.isDefending.value
                     )
                 }
             }
@@ -56,6 +57,7 @@ fun Battlefield(
                 Column {
                     ArenaCard(
                         card = card,
+                        isDefending = player.isDefending.value
                     )
                 }
             }

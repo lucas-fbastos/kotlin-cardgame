@@ -1,12 +1,7 @@
 @file:Suppress("FunctionName")
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -61,7 +56,8 @@ fun App() {
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(16.dp)
+                .width(width = 1200.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row {
@@ -112,20 +108,6 @@ fun main() = application {
     ) {
         App()
     }
-}
-
-
-fun endTurn(
-    opponent: Opponent,
-    player: Player,
-    wasPlayerTurn: Boolean,
-    onPlayChange: (Boolean) -> Unit,
-) {
-    if (wasPlayerTurn)
-        onPlayChange(false).run {
-            opponent.act(player = player)
-        }
-    onPlayChange(true)
 }
 
 private fun List<Card>.toOpponentCard() =

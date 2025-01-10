@@ -31,6 +31,7 @@ import kotlin.math.roundToInt
 @Composable
 fun ArenaCard(
     card: Card,
+    isDefending: Boolean,
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -91,7 +92,7 @@ fun ArenaCard(
                     )
                 }
             }
-            if (card.playerOwned) {
+            if (card.playerOwned && !isDefending) {
                 Row {
                     Button(
                         onClick = { },
@@ -100,7 +101,15 @@ fun ArenaCard(
                         Text("Attack")
                     }
                 }
-            }
+            } else if (card.playerOwned)
+                Row {
+                    Button(
+                        onClick = { },
+                        enabled = true,
+                    ) {
+                        Text("Defend")
+                    }
+                }
         }
     }
 }

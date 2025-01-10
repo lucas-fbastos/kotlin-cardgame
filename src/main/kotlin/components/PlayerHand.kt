@@ -48,7 +48,7 @@ fun PlayerHand(
     }
     Row {
         Text(
-            text = "Cards: ${player.deck.value.size}",
+            text = "Cards: ${player.hand.value.size}",
             color = Color.Black
         )
     }

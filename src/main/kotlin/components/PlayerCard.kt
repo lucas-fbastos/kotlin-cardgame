@@ -27,7 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import endTurn
+import constants.*
+import constants.BLACK
+import constants.GRAY
+import constants.PURPLE
 import entities.Card
 import entities.Opponent
 import entities.Player
@@ -52,8 +55,8 @@ fun PlayerCard(
         modifier = Modifier
             .padding(5.dp)
             .size(
-                width = 381.dp,
-                height = 481.dp
+                width = 181.dp,
+                height = 281.dp
             )
             .offset {
                 IntOffset(
@@ -62,7 +65,7 @@ fun PlayerCard(
                 )
             }
             .background(
-                color = Color.Transparent,
+                color = Color.Red,
                 shape = RoundedCornerShape(2.dp)
             )
             .border(
@@ -77,7 +80,7 @@ fun PlayerCard(
                 )
             }
             .pointerInput(canPlay) {
-                if (canPlay) {
+                if (canPlay && !player.isDefending.value) {
                     detectDragGestures(
                         onDragEnd = {
                             val isOutsideParent = cardPosition.y < handPosition.y
@@ -85,7 +88,7 @@ fun PlayerCard(
                                 onPlayChange(false)
                                 player.playCard(card = card)
                                 isPlayed = true
-                                endTurn(
+                                player.endTurn(
                                     player = player,
                                     opponent = opponent,
                                     wasPlayerTurn = true,
@@ -108,10 +111,9 @@ fun PlayerCard(
     ) {
         Box(
             modifier = Modifier
-                .offset(x = 100.dp, y = 100.dp)
                 .size(181.dp, 281.dp)
                 .background(
-                    color = Color(0xFF961A7B),
+                    color = Color(color = PURPLE),
                     shape = RoundedCornerShape(4.dp)
                 )
                 .border(
@@ -123,45 +125,45 @@ fun PlayerCard(
 
         Box(
             modifier = Modifier
-                .offset(x = 107.dp, y = 106.dp)
+                .offset(x = 7.dp, y = 6.dp)
                 .size(167.dp, 269.dp)
-                .background(color = Color(0xFF040000))
+                .background(color = Color(color = BLACK))
         )
 
         Box(
             modifier = Modifier
-                .offset(x = 114.dp, y = 266.dp)
+                .offset(x = 14.dp, y = 66.dp)
                 .size(152.dp, 92.dp)
-                .background(color = Color(0xFFD9D9D9))
+                .background(color = Color(GRAY))
                 .shadow(4.dp, shape = RoundedCornerShape(10.dp))
         )
 
         Box(
             modifier = Modifier
-                .offset(x = 114.dp, y = 113.dp)
+                .offset(x = 14.dp, y = 13.dp)
                 .size(157.dp, 16.dp)
-                .background(color = Color(0xFFD9D9D9))
+                .background(color = Color(color = GRAY))
                 .shadow(4.dp, shape = RoundedCornerShape(10.dp))
         )
 
         Box(
             modifier = Modifier
-                .offset(x = 114.dp, y = 144.dp)
+                .offset(x = 14.dp, y = 44.dp)
                 .size(152.dp, 107.dp)
-                .background(color = Color(0xFFD9D9D9))
+                .background(color = Color(color = GRAY))
         )
 
         Box(
             modifier = Modifier
-                .offset(x = 251.dp, y = 113.dp)
+                .offset(x = 151.dp, y = 13.dp)
                 .size(20.dp, 16.dp)
-                .background(color = Color(0xFFFF5FDB).copy(alpha = 0.41f)) // Ellipse 1
+                .background(color = Color(LIGHT_PURPLE).copy(alpha = 0.41f))
         )
 
         Text(
             text = "${card.strength}",
             modifier = Modifier
-                .offset(x = 257.dp, y = 113.dp)
+                .offset(x = 157.dp, y = 13.dp)
                 .background(Color.Transparent), // No background
             fontSize = 12.sp,
             lineHeight = 15.sp,
@@ -170,7 +172,7 @@ fun PlayerCard(
         Text(
             text = card.name,
             modifier = Modifier
-                .offset(x = 133.dp, y = 113.dp),
+                .offset(x = 33.dp, y = 13.dp),
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
@@ -182,12 +184,12 @@ fun PlayerCard(
             Text(
                 text = it,
                 modifier = Modifier
-                    .offset(x = 126.dp, y = 297.dp),
+                    .offset(x = 26.dp, y = 197.dp),
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Light,
                 fontSize = 12.sp,
                 lineHeight = 15.sp,
-                color = Color.Black
+                color = Color.White
             )
         }
     }
