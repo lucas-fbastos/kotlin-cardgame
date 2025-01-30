@@ -35,7 +35,7 @@ fun Battlefield(
                 Column {
                     ArenaCard(
                         card = card,
-                        isDefending = player.isDefending.value
+                        attackedBy = player.attackedBy.value
                     )
                 }
             }
@@ -57,7 +57,7 @@ fun Battlefield(
                 Column {
                     ArenaCard(
                         card = card,
-                        isDefending = player.isDefending.value
+                        attackedBy = player.attackedBy.value
                     )
                 }
             }

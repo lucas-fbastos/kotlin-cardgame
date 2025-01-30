@@ -2,7 +2,6 @@ package entities
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import constants.SNEAKY
 
 class Opponent(
     deck: MutableState<MutableList<Card>>,
@@ -50,10 +49,11 @@ class Opponent(
 
     private fun attack(player: Player) {
         println("ATTACK!!!!")
-        player.setDefendingState()
+        val attacker = getDeadlyCard() ?: getSmallCard()
+        player.setAttackedBy(attacker = attacker)
            /* .also {
                 val target: Card = chooseTarget(player.arena.value)
-                val attacker = getDeadlyCard() ?: getSmallCard()
+
                 attacker.battle(target)
                 removeCardsFromBoard(
                     opponent = this,
@@ -68,7 +68,7 @@ class Opponent(
     private fun selectCardToPlay(player: Player): Card {
         return if (player.checkSneaky()) {
             hand.value.first {
-                it.keywords.containsKey(SNEAKY) &&
+                it.keywords.any { it.getType() == KeywordType.SNEAKY } &&
                         it.strength >= player.getStrongestSneaky().strength
             }
         } else {
@@ -87,13 +87,13 @@ class Opponent(
 }
 
 fun Player.checkSneaky() =
-    this.arena.value.any { card -> card.keywords.containsKey(SNEAKY) }
+    this.arena.value.any { card -> card.keywords.any { it.getType() == KeywordType.SNEAKY  } }
 
 fun Player.hasMindBugs() = this.amountOfMindBugs > 0
 
 fun Player.getStrongestSneaky() = this.arena
     .value.filter { card ->
         card.keywords
-            .containsKey(SNEAKY)
+            .any { it.getType() == KeywordType.SNEAKY  }
     }
     .maxBy { it.strength }

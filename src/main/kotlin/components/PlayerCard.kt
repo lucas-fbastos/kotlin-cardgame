@@ -80,7 +80,7 @@ fun PlayerCard(
                 )
             }
             .pointerInput(canPlay) {
-                if (canPlay && !player.isDefending.value) {
+                if (canPlay && player.attackedBy.value == null) {
                     detectDragGestures(
                         onDragEnd = {
                             val isOutsideParent = cardPosition.y < handPosition.y

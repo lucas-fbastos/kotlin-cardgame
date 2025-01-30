@@ -1,6 +1,7 @@
 ### TODO LIST
+- create how to select defender (player and opponent side) -> player side done
+- implement a way of setting the defender, even when there is no card available to defend.
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
-- create how to select defender (player and opponent side)
 - create how to select attacker (player side)
 - implement buy card (player and opponent side)
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
@@ -35,3 +36,4 @@
 - implement discard pile
 - improved seeder
 - fixed attack killing all equal cards on the arena
+- refactored keywords (thank god)
