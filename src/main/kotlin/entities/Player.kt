@@ -6,11 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 open class Player(
     var amountOfMindBugs: Int = 2,
     var lifePoints: Int = 3,
-    var hand: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
-    var discardPile: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
-    var deck: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
-    var arena: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
-    var isDefending: MutableState<Boolean> = mutableStateOf(value= false)
+    val hand: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
+    val discardPile: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
+    val deck: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
+    val arena: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
+    val attackedBy: MutableState<Card?> = mutableStateOf(value= null)
 ) {
 
     fun playCard(card: Card) {
@@ -21,8 +21,8 @@ open class Player(
             .apply { add(card) }
     }
 
-    fun setDefendingState(){
-        isDefending.value = true
+    fun setAttackedBy(attacker: Card){
+        attackedBy.value = attacker
     }
 
     fun endTurn(

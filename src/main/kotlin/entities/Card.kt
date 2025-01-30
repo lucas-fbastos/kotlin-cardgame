@@ -1,8 +1,5 @@
 package entities
 
-import constants.POISONOUS
-import constants.SNEAKY
-import constants.TOUGH
 import java.util.UUID
 
 data class Card(
@@ -10,17 +7,18 @@ data class Card(
     val name: String,
     val strength: Int,
     val flavorText: String? = null,
-    val keywords: Map<String, Keyword>,
     val ability: Ability? = null,
     var alive: Boolean = true,
     var playerOwned: Boolean = true,
     var resistance: Boolean = false,
+    val keywords: List<Keyword> = emptyList()
 ) {
 
     fun die() {
-        keywords[TOUGH]
+        keywords
+            .firstOrNull(){ it.getType() == KeywordType.TOUGH }
             ?.resolve(target = null, self = this)
-            ?: run {
+            ?. run {
                 alive = false
             }
     }
@@ -28,18 +26,15 @@ data class Card(
     fun battle(opponent: Card) {
         var hit = true
         var opponentHit = true
-        this.keywords[POISONOUS]
-            ?.resolve(
-                target = opponent,
-                self = this,
-            )
+
+        this.keywords
+            .firstOrNull{ it.getType() == KeywordType.POISONOUS}
+            ?.resolve(target = opponent, self = this)
             ?: run { hit = false }
 
-        opponent.keywords[POISONOUS]
-            ?.resolve(
-                target = this,
-                self = opponent,
-            )
+        opponent.keywords
+            .firstOrNull{ it.getType() == KeywordType.POISONOUS}
+            ?.resolve(target = this, self = opponent)
             ?: run { opponentHit = false }
 
         if (hit && opponentHit)
@@ -58,15 +53,25 @@ data class Card(
         }
     }
 
-    fun canDefend(attacker: Card): Boolean = attacker.keywords[SNEAKY]
-        ?.let {
-            this.keywords.containsKey(SNEAKY)
-        } ?: true
+    fun canDefend(attacker: Card): Boolean
+        = attacker.keywords
+            .firstOrNull { it.getType() == KeywordType.SNEAKY }
+            ?.let {
+                this.keywords.any{ it.getType() == KeywordType.SNEAKY}
+            } ?: true
 
 }
 
 interface Keyword {
     fun resolve(target: Card?, self: Card)
+
+    fun getType() : KeywordType
+}
+
+enum class KeywordType{
+    SNEAKY,
+    POISONOUS,
+    TOUGH
 }
 
 interface Ability {
@@ -77,6 +82,8 @@ class Poisonous : Keyword {
     override fun resolve(target: Card?, self: Card) {
         target?.die()
     }
+
+    override fun getType(): KeywordType = KeywordType.POISONOUS
 }
 
 class Tough : Keyword {
@@ -86,8 +93,13 @@ class Tough : Keyword {
             self.alive = true
         }
     }
+
+    override fun getType(): KeywordType = KeywordType.TOUGH
 }
 
 class Sneaky : Keyword{
     override fun resolve(target: Card?, self: Card) { }
+
+    override fun getType(): KeywordType = KeywordType.SNEAKY
+
 }
