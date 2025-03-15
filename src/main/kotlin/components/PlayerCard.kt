@@ -27,9 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import constants.*
 import constants.BLACK
 import constants.GRAY
+import constants.LIGHT_PURPLE
 import constants.PURPLE
 import entities.Card
 import entities.Opponent
