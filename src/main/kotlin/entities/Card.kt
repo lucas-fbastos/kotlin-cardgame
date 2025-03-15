@@ -18,7 +18,7 @@ data class Card(
         keywords
             .firstOrNull(){ it.getType() == KeywordType.TOUGH }
             ?.resolve(target = null, self = this)
-            ?. run {
+            ?: run {
                 alive = false
             }
     }
@@ -37,9 +37,7 @@ data class Card(
             ?.resolve(target = this, self = opponent)
             ?: run { opponentHit = false }
 
-        if (hit && opponentHit)
-            return
-        else {
+
             if (opponent.strength > this.strength && !opponentHit) {
                 this.die()
             } else if (opponent.strength == this.strength) {
@@ -50,7 +48,7 @@ data class Card(
             } else if (opponent.strength < this.strength && !hit) {
                 opponent.die()
             }
-        }
+
     }
 
     fun canDefend(attacker: Card): Boolean

@@ -1,7 +1,5 @@
 package entities
 
-import constants.POISONOUS
-import constants.TOUGH
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -16,14 +14,14 @@ class CardTest {
         val card1 = Card(
             name = "Poisonous Card",
             strength = 5,
-            keywords = mapOf(POISONOUS to poisonous)
+            keywords = listOf(poisonous)
         )
 
         // Card with Tough keyword
         val card2 = Card(
             name = "Tough Card",
             strength = 5,
-            keywords = mapOf(TOUGH to tough),
+            keywords = listOf(tough),
             resistance = true
         )
 
@@ -39,13 +37,13 @@ class CardTest {
         val card3 = Card(
             name = "Strong Card",
             strength = 10,
-            keywords = mapOf(POISONOUS to poisonous)
+            keywords = listOf(poisonous)
         )
 
         val card4 = Card(
             name = "Weak Card",
             strength = 1,
-            keywords = mapOf(TOUGH to tough),
+            keywords = listOf(tough),
             resistance = true
         )
 
