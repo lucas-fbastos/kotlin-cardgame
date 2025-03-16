@@ -18,7 +18,7 @@ fun OpponentHand(
 
     Row {
         Text(
-            text = "Health: ${opponent.lifePoints}",
+            text = "Health: ${opponent.lifePoints.value}",
             color = Color.Red
         )
     }

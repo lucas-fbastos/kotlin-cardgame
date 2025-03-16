@@ -37,3 +37,6 @@
 - improved seeder
 - fixed attack killing all equal cards on the arena
 - refactored keywords (thank god)
+- player take hit
+- endgame screen
+- simplified can defend logic

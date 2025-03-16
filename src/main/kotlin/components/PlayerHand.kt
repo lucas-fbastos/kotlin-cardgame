@@ -36,7 +36,7 @@ fun PlayerHand(
             .height(20.dp)
     ) {
         Text(
-            text = "Health: ${player.lifePoints}",
+            text = "Health: ${player.lifePoints.value}",
             color = Color.Red
         )
     }

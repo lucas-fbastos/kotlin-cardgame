@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -51,6 +52,8 @@ fun App() {
             )
         )
     }
+
+    if (player.lifePoints.value == 0) endGame(playerWon = false).also { canPlay = false }
 
     MaterialTheme {
         Column(
@@ -96,6 +99,20 @@ fun App() {
                 },
             )
         }
+    }
+}
+
+@Composable
+fun endGame(playerWon: Boolean) {
+    Window(
+        onCloseRequest = { },
+        resizable = false,
+        title = "Game Ended",
+    ) {
+        Text(
+            textAlign = TextAlign.Center,
+            text = if (playerWon) "YOU WON!" else "YOU LOST!"
+        )
     }
 }
 
