@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import components.Battlefield
@@ -108,6 +109,7 @@ fun endGame(playerWon: Boolean) {
         onCloseRequest = { },
         resizable = false,
         title = "Game Ended",
+        state = WindowState(width = 200.dp, height = 200.dp)
     ) {
         Text(
             textAlign = TextAlign.Center,

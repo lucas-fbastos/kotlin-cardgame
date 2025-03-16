@@ -16,7 +16,7 @@ data class Card(
 
     fun die() {
         keywords
-            .firstOrNull(){ it.getType() == KeywordType.TOUGH }
+            .firstOrNull{ it.getType() == KeywordType.TOUGH }
             ?.resolve(target = null, self = this)
             ?: run {
                 alive = false
@@ -24,19 +24,18 @@ data class Card(
     }
 
     fun battle(opponent: Card) {
-        var hit = true
-        var opponentHit = true
 
-        this.keywords
+        val hit = this.keywords
             .firstOrNull{ it.getType() == KeywordType.POISONOUS}
             ?.resolve(target = opponent, self = this)
-            ?: run { hit = false }
+            ?.let { true }
+            ?: false
 
-        opponent.keywords
+        val opponentHit = opponent.keywords
             .firstOrNull{ it.getType() == KeywordType.POISONOUS}
             ?.resolve(target = this, self = opponent)
-            ?: run { opponentHit = false }
-
+            ?.let { true }
+            ?: false
 
             if (opponent.strength > this.strength && !opponentHit) {
                 this.die()
