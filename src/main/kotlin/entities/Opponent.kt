@@ -53,29 +53,17 @@ class Opponent(
     ) {
         println("ATTACK!!!!")
         val attacker = getDeadlyCard() ?: getSmallCard()
-        if (canDefend)
+        if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky() ) )
             player.setAttackedBy(attacker = attacker)
         else
             player.takeHit()
-        /* .also {
-             val target: Card = chooseTarget(player.arena.value)
-
-             attacker.battle(target)
-             removeCardsFromBoard(
-                 opponent = this,
-                 player = player
-             )  <-- this will be done after the defender is selected
-         }  */
     }
-
-    private fun chooseTarget(playerArena: List<Card>): Card =
-        playerArena.minBy { it.strength }
 
     private fun selectCardToPlay(player: Player): Card {
         return if (player.checkSneaky()) {
-            hand.value.first {
-                it.keywords.any { it.getType() == KeywordType.SNEAKY } &&
-                        it.strength >= player.getStrongestSneaky().strength
+            hand.value.first { card ->
+                card.keywords.any { it.getType() == KeywordType.SNEAKY } &&
+                        card.strength >= player.getStrongestSneaky().strength
             }
         } else {
             getDeadlyCard()
@@ -92,12 +80,15 @@ class Opponent(
 
 }
 
-fun Player.checkSneaky() =
-    this.arena.value.any { card -> card.keywords.any { it.getType() == KeywordType.SNEAKY } }
+internal fun Player.checkSneaky() =
+    this.arena.value
+        .any { card -> card.keywords
+            .any { it.getType() == KeywordType.SNEAKY }
+        }
 
-fun Player.hasMindBugs() = this.amountOfMindBugs > 0
+internal fun Player.hasMindBugs() = this.amountOfMindBugs > 0
 
-fun Player.getStrongestSneaky() = this.arena
+internal fun Player.getStrongestSneaky() = this.arena
     .value.filter { card ->
         card.keywords
             .any { it.getType() == KeywordType.SNEAKY }

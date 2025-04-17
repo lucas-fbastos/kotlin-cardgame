@@ -31,7 +31,7 @@ private fun createAssassinHedgehog() : Card = Card(
     name = "Assassin Hedgehog",
     strength = 4,
     flavorText = "never lost a contract...",
-    keywords = listOf(Poisonous(), Sneaky())
+    keywords = listOf(Poisonous(),)
 )
 
 private fun createPhoneStealerOtter() : Card = Card(

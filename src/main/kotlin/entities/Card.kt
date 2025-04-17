@@ -1,5 +1,6 @@
 package entities
 
+import helper.removeCardsFromBoard
 import java.util.UUID
 
 data class Card(
@@ -16,56 +17,69 @@ data class Card(
 
     fun die() {
         keywords
-            .firstOrNull{ it.getType() == KeywordType.TOUGH }
+            .firstOrNull { it.getType() == KeywordType.TOUGH }
             ?.resolve(target = null, self = this)
             ?: run {
                 alive = false
             }
     }
 
-    fun battle(opponent: Card) {
+    internal fun defend(
+        player: Player,
+        opponent: Opponent
+    ) {
+        assert(player.attackedBy.value != null)
+        battle(opponent = player.attackedBy.value!!)
+            .also {
+                player.attackedBy.value = null
+                removeCardsFromBoard(
+                    opponent = opponent,
+                    player = player
+                )
+            }
+    }
 
+    internal fun battle(opponent: Card) {
         val hit = this.keywords
-            .firstOrNull{ it.getType() == KeywordType.POISONOUS}
+            .firstOrNull { it.getType() == KeywordType.POISONOUS }
             ?.resolve(target = opponent, self = this)
             ?.let { true }
             ?: false
 
         val opponentHit = opponent.keywords
-            .firstOrNull{ it.getType() == KeywordType.POISONOUS}
+            .firstOrNull { it.getType() == KeywordType.POISONOUS }
             ?.resolve(target = this, self = opponent)
             ?.let { true }
             ?: false
 
-            if (opponent.strength > this.strength && !opponentHit) {
+        if (opponent.strength > this.strength && !opponentHit) {
+            this.die()
+        } else if (opponent.strength == this.strength) {
+            if (!opponentHit)
                 this.die()
-            } else if (opponent.strength == this.strength) {
-                if (!opponentHit)
-                    this.die()
-                if (!hit)
-                    opponent.die()
-            } else if (opponent.strength < this.strength && !hit) {
+            if (!hit)
                 opponent.die()
-            }
+        } else if (opponent.strength < this.strength && !hit) {
+            opponent.die()
+        }
 
     }
 
-    fun canDefend(attacker: Card): Boolean
-        = attacker.keywords
-            .firstOrNull { it.getType() == KeywordType.SNEAKY }
-            ?.let {
-                this.keywords.any{ it.getType() == KeywordType.SNEAKY}
-            } ?: true
+    fun canDefend(attacker: Card): Boolean = attacker.keywords
+        .firstOrNull { it.getType() == KeywordType.SNEAKY }
+        ?.let {
+            this.keywords.any { it.getType() == KeywordType.SNEAKY }
+        } ?: true
 
 }
 
 interface Keyword {
     fun resolve(target: Card?, self: Card)
 
-    fun getType() : KeywordType
+    fun getType(): KeywordType
 }
 
-enum class KeywordType{
+enum class KeywordType {
     SNEAKY,
     POISONOUS,
     TOUGH
@@ -94,8 +108,8 @@ class Tough : Keyword {
     override fun getType(): KeywordType = KeywordType.TOUGH
 }
 
-class Sneaky : Keyword{
-    override fun resolve(target: Card?, self: Card) { }
+class Sneaky : Keyword {
+    override fun resolve(target: Card?, self: Card) {}
 
     override fun getType(): KeywordType = KeywordType.SNEAKY
 

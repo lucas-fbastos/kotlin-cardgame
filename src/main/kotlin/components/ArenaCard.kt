@@ -25,13 +25,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import entities.Card
+import entities.Opponent
+import entities.Player
 import kotlin.math.roundToInt
 
 
 @Composable
 fun ArenaCard(
     card: Card,
-    attackedBy: Card?,
+    player: Player,
+    opponent: Opponent,
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -83,6 +86,15 @@ fun ArenaCard(
                     }
                 }
             }
+            card.keywords.forEach {
+                Column {
+                    Text(
+                        text = it.getType().name,
+                        color = Color.Black,
+                        textAlign = TextAlign.Justify
+                    )
+                }
+            }
             card.flavorText?.let {
                 Column {
                     Text(
@@ -92,11 +104,13 @@ fun ArenaCard(
                     )
                 }
             }
-            attackedBy?.let {
+            player.attackedBy.value?.let {
                 if (card.playerOwned && card.canDefend(attacker = it)) {
                     Row {
                         Button(
-                            onClick = { },
+                            onClick = {
+                                card.defend(opponent = opponent, player = player)
+                            },
                             enabled = true,
                         ) {
                             Text("Defend")
@@ -104,7 +118,7 @@ fun ArenaCard(
                     }
                 }
             }
-            if (card.playerOwned && attackedBy == null) {
+            if (card.playerOwned && player.attackedBy.value == null) {
                 Row {
                     Button(
                         onClick = { },

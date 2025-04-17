@@ -35,7 +35,8 @@ fun Battlefield(
                 Column {
                     ArenaCard(
                         card = card,
-                        attackedBy = player.attackedBy.value
+                        player = player,
+                        opponent = opponent,
                     )
                 }
             }
@@ -57,7 +58,8 @@ fun Battlefield(
                 Column {
                     ArenaCard(
                         card = card,
-                        attackedBy = player.attackedBy.value
+                        player = player,
+                        opponent = opponent
                     )
                 }
             }
