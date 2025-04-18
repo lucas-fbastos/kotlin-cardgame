@@ -46,14 +46,26 @@ fun OpponentHand(
             color = Color.Black
         )
     }
+    Row {
+        Text(
+            text = "Graveyard: ${opponent.discardPile.value.size}",
+            color = Color.Black
+        )
+    }
+    Row {
+        opponent.hand.value.forEach {
+            Text(text = it.name)
+        }
+    }
+
     Row(
         modifier = Modifier
             .height(300.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        opponent.hand.value.forEach { _ ->
-            OpponentCard()
+        opponent.hand.value.forEach { card ->
+            OpponentCard(card)
         }
     }
 }

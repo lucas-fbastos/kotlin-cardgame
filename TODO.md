@@ -1,5 +1,5 @@
 ### TODO LIST
-- attack feature for player
+- implement you win screen
 - implement a way of setting the defender, even when there is no card available to defend.
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
@@ -40,3 +40,5 @@
 - player now can defend opponent card
 - implement buy card (player and opponent side)
 - REFACTORED THE TURN CHANGE, GOT RID OF THAT NASTY ONPLAYCHANGE WORKAROUND 
+- attack feature for player
+- player doing direct hit when opponent has no defense

@@ -51,7 +51,7 @@ class BoardHelper{
                     removeAll(this.filterNot { it.alive })
                 }
 
-            opponent.discardPile.value = player.discardPile.value
+            opponent.discardPile.value = opponent.discardPile.value
                 .apply { addAll(opponentDeadCards) }
         }
     }

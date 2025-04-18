@@ -41,6 +41,9 @@ data class Card(
     }
 
     internal fun battle(opponent: Card) {
+        println("BATTLE!!!")
+        println(" ATTACKER: ${this.name}")
+        println(" DEFENDER: ${opponent.name}")
         val hit = this.keywords
             .firstOrNull { it.getType() == KeywordType.POISONOUS }
             ?.resolve(target = opponent, self = this)

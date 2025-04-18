@@ -70,7 +70,7 @@ fun ArenaCard(
             Row {
                 Column {
                     Text(
-                        text = card.name,
+                        text = card.id.toString(),
                         color = Color.Black,
                         textAlign = TextAlign.Center
                     )
@@ -121,11 +121,16 @@ fun ArenaCard(
             if (card.playerOwned && player.attackedBy.value == null) {
                 Row {
                     Button(
-                        onClick = { },
+                        onClick = { player.attack(opponent = opponent, attacker = card) },
                         enabled = true
                     ) {
                         Text("Attack")
                     }
+                }
+            }else if (card.playerOwned){
+                Row {
+                    Text("ATTACKED BY: ${player.attackedBy.value?.name}"
+                    )
                 }
             }
         }

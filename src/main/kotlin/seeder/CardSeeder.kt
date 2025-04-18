@@ -7,12 +7,12 @@ import entities.Sneaky
 fun seed(): List<Card> {
 
     return listOf(
-        createRegularAnt(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
-        createRegularAnt(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
+        createRegularAnt(), createPhoneStealerOtter(), createRegularAnt(), createRegularAnt(),
+        createPhoneStealerOtter(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
         createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
         createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAssassinHedgehog(),
         createAssassinHedgehog(), createDeadlyHamster(),  createPhoneStealerOtter(), createPhoneStealerOtter(),
-    )
+    ).shuffled()
 }
 
 private fun createRegularAnt(): Card = Card(

@@ -27,6 +27,17 @@ open class Player(
             .apply { add(card) }
     }
 
+    fun attack(opponent: Opponent, attacker: Card){
+        opponent.setAttackedBy(attacker)
+        opponent.defend().also {
+            BoardHelper.removeCardsFromBoard(
+                opponent = opponent,
+                player = this
+            )
+            endTurn(opponent = opponent, player = this, wasPlayerTurn = true)
+        }
+    }
+
     fun setAttackedBy(attacker: Card) {
         attackedBy.value = attacker
     }
