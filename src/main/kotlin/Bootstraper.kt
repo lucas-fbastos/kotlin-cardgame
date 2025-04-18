@@ -7,11 +7,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -26,6 +23,7 @@ import components.PlayerHand
 import entities.Card
 import entities.Opponent
 import entities.Player
+import helper.BoardHelper
 import seeder.seed
 
 @Composable
@@ -34,7 +32,7 @@ fun App() {
     val (playerCards, opponentCards, playerHand, opponentHand) = seed()
         .chunked(size = 5)
         .toMutableList()
-    var turn: Int by rememberSaveable { mutableStateOf(1) }
+    val turn by BoardHelper.turn.collectAsState()
     var canPlay: Boolean by rememberSaveable { mutableStateOf(true) }
     val opponent: Opponent by rememberSaveable {
         mutableStateOf(
@@ -68,8 +66,8 @@ fun App() {
                 Text("DEBUG MENU ")
                 Button(
                     onClick = {
-                        canPlay = !canPlay
-                        turn = turn.inc()
+                        BoardHelper.releasePlayer()
+                        BoardHelper.increaseTurn()
                     },
                     modifier = Modifier.padding(vertical = 20.dp)
                 ) {
@@ -94,10 +92,6 @@ fun App() {
                 player = player,
                 opponent = opponent,
                 canPlay = canPlay,
-                onPlayChange = {
-                    if (canPlay) turn += 1
-                    canPlay = it
-                },
             )
         }
     }

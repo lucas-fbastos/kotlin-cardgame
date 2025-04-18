@@ -40,6 +40,7 @@ class Opponent(
             playCard(
                 card = selectCardToPlay(player = player)
             )
+            endTurn(opponent = this,player = player, wasPlayerTurn = false)
         } else
             attack(
                 player = player,

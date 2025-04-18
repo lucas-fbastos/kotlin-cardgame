@@ -30,7 +30,13 @@ fun OpponentHand(
     }
     Row {
         Text(
-            text = "Cards: ${opponent.deck.value.size}",
+            text = "Cards: ${opponent.hand.value.size}",
+            color = Color.Black
+        )
+    }
+    Row {
+        Text(
+            text = "Deck: ${opponent.deck.value.size}",
             color = Color.Black
         )
     }

@@ -34,6 +34,7 @@ import constants.PURPLE
 import entities.Card
 import entities.Opponent
 import entities.Player
+import helper.BoardHelper
 import kotlin.math.roundToInt
 
 
@@ -42,7 +43,6 @@ import kotlin.math.roundToInt
 fun PlayerCard(
     card: Card,
     canPlay: Boolean,
-    onPlayChange: (Boolean) -> Unit,
     handPosition: Offset,
     player: Player,
     opponent: Opponent,
@@ -83,20 +83,27 @@ fun PlayerCard(
                 if (canPlay && player.attackedBy.value == null) {
                     detectDragGestures(
                         onDragEnd = {
-                            val isOutsideParent = cardPosition.y < handPosition.y
+                            val handTopBoundary = handPosition.y
+
+                            // Calculate the current position of the card (top + current offset)
+                            val currentCardY = cardPosition.y + offset.y
+
+                            // Check if the card is significantly above the hand area (add some threshold)
+                            val dragThreshold = 30f
+                            val isOutsideParent = currentCardY < (handTopBoundary - dragThreshold)
+
                             if (isOutsideParent) {
-                                onPlayChange(false)
+                                BoardHelper.blockPlayer()
                                 player.playCard(card = card)
                                 isPlayed = true
                                 player.endTurn(
                                     player = player,
                                     opponent = opponent,
                                     wasPlayerTurn = true,
-                                    onPlayChange = onPlayChange,
                                 )
                             } else {
-                                println("INSIDE")
-                                offset = Offset(0f, 0f)
+                                println("INSIDE - Card Y: $currentCardY, Hand Y: $handTopBoundary")
+                                offset = Offset(0f, 0f) // Reset position
                             }
                         },
                         onDrag = { dragAmount ->
@@ -192,6 +199,7 @@ fun PlayerCard(
                 color = Color.White
             )
         }
+
     }
 
 }

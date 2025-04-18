@@ -2,7 +2,6 @@
 - attack feature for player
 - implement a way of setting the defender, even when there is no card available to defend.
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
-- implement buy card (player and opponent side)
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
 - improve logging when cards battle
 - create refined strategy for opponent to check cards before selecting the attacker 
@@ -39,3 +38,5 @@
 - game over screen
 - simplified can defend logic
 - player now can defend opponent card
+- implement buy card (player and opponent side)
+- REFACTORED THE TURN CHANGE, GOT RID OF THAT NASTY ONPLAYCHANGE WORKAROUND 

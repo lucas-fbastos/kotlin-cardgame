@@ -1,6 +1,6 @@
 package entities
 
-import helper.removeCardsFromBoard
+import helper.BoardHelper
 import java.util.UUID
 
 data class Card(
@@ -32,10 +32,11 @@ data class Card(
         battle(opponent = player.attackedBy.value!!)
             .also {
                 player.attackedBy.value = null
-                removeCardsFromBoard(
+                BoardHelper.removeCardsFromBoard(
                     opponent = opponent,
                     player = player
                 )
+                player.endTurn(opponent = opponent, player = player, wasPlayerTurn = false)
             }
     }
 

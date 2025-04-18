@@ -26,7 +26,6 @@ fun PlayerHand(
     player: Player,
     opponent: Opponent,
     canPlay: Boolean,
-    onPlayChange: (Boolean) -> Unit,
 ) {
     var positionHand by remember { mutableStateOf(Offset.Zero) }
     var sizeHand by remember { mutableStateOf(Offset.Zero) }
@@ -54,6 +53,12 @@ fun PlayerHand(
     }
     Row {
         Text(
+            text = "Deck: ${player.deck.value.size}",
+            color = Color.Black
+        )
+    }
+    Row {
+        Text(
             text = "Arena: ${player.arena.value.size}",
             color = Color.Black
         )
@@ -72,7 +77,7 @@ fun PlayerHand(
                 shape = RoundedCornerShape(
                     size = 5.dp
                 ),
-                color = Color.Transparent
+                color = Color.Red
             ).onGloballyPositioned { layoutCoordinates ->
                 positionHand = layoutCoordinates.positionInRoot()
                 sizeHand = Offset(
@@ -82,11 +87,12 @@ fun PlayerHand(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        key(positionHand, sizeHand) {
-            player.hand.value.forEach { card ->
+        // Instead of wrapping the forEach with key, use key for each individual item
+        player.hand.value.forEach { card ->
+            // Use card's id as the key to help Compose track individual cards
+            key(card.id) {
                 PlayerCard(
                     canPlay = canPlay,
-                    onPlayChange = onPlayChange,
                     handPosition = positionHand,
                     card = card,
                     player = player,
