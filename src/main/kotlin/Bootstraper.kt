@@ -17,6 +17,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.zIndex
 import components.Battlefield
 import components.OpponentHand
 import components.PlayerHand
@@ -59,7 +60,9 @@ fun App() {
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
-                .width(width = 1200.dp),
+                .width(width = 1200.dp)
+                .zIndex(1f),
+
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row {

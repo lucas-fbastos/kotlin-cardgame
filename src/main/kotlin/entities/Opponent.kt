@@ -35,15 +35,15 @@ class Opponent(
             }
     }
 
-    private fun canPlayerDefend(player: Player): Boolean  =
-         (player.arena.value.isNotEmpty() || checkSneaky() && player.checkSneaky())
+    private fun canPlayerDefend(player: Player): Boolean =
+        (player.arena.value.isNotEmpty() || checkSneaky() && player.checkSneaky())
 
 
     fun defend() {
         println("DEFEND!!!!!")
         assert(this.attackedBy.value != null)
         val attacker: Card = this.attackedBy.value!!
-        if(attacker.isSneaky() && arena.value.any{ it.isSneaky() } || arena.value.isEmpty()){
+        if(attacker.isSneaky() && arena.value.any { it.isSneaky() } || arena.value.isEmpty()) {
             takeHit()
             return
         }
@@ -66,7 +66,7 @@ class Opponent(
         attacker.isSneaky() ->
             arena.value.firstOrNull { it.isSneaky() }
 
-        attacker.strength > arena.value.maxBy { it.strength }.strength && arena.value.any{it.isPoisonous()} ->
+        attacker.strength > arena.value.maxBy { it.strength }.strength && arena.value.any { it.isPoisonous() } ->
             arena.value.firstOrNull { it.isPoisonous() }
 
         else ->
@@ -77,41 +77,49 @@ class Opponent(
 
     fun act(player: Player) {
         println("ACT!!!!")
-        if(arena.value.size > 0){
+        if (arena.value.size > 0) {
             val canDefend = canPlayerDefend(player) && playerDefenseWillSurvive(player)
             if (canDefend && hand.value.size > 0) {
                 println(" PLAY CARD!!!!")
+
                 val cardToPlay = selectCardToPlay(player = player)
+
                 println(" PLAY THIS CARD: ${cardToPlay.name}")
-                playCard(
-                    card = cardToPlay
-                )
+                playCard(card = cardToPlay)
+
                 endTurn(
                     opponent = this,
                     player = player,
                     wasPlayerTurn = false
                 )
-            } else
-                attack(
-                    player = player,
-                    canDefend = canDefend
-                )
-        }else{
-            if(hand.value.size > 0 ){
-                println(" PLAY CARD!!!!")
-                val cardToPlay = selectCardToPlay(player = player)
-                println(" PLAY THIS CARD: ${cardToPlay.name}")
-                playCard(
-                    card = cardToPlay
-                )
-                endTurn(opponent = this, player = player, wasPlayerTurn = false)
-            }else{
-                //TODO: Implement player victory mechanism
-                println("PLAYER WON")
+                return
             }
+            attack(
+                player = player,
+                canDefend = canDefend
+            )
+            return
+        }
+        if (hand.value.size <= 0) {
+            println("PLAYER WON")
+            //TODO: Implement player victory mechanism
+            return
         }
 
+        println(" PLAY CARD!!!!")
+        val cardToPlay = selectCardToPlay(player = player)
+
+        println(" PLAY THIS CARD: ${cardToPlay.name}")
+        playCard(card = cardToPlay)
+
+        endTurn(
+            opponent = this,
+            player = player,
+            wasPlayerTurn = false
+        )
+
     }
+
 
     private fun attack(
         player: Player,
@@ -120,10 +128,11 @@ class Opponent(
         println("ATTACK!!!!")
         val attacker = arena.value.getDeadlyCard() ?: arena.value.getSmallCard()
         println("ATTACKER : ${attacker.name}")
-        if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky()))
+        if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky())) {
             player.setAttackedBy(attacker = attacker)
-        else
-            player.takeHit()
+            return
+        }
+        player.takeHit()
     }
 
     private fun selectCardToPlay(player: Player): Card {
@@ -140,7 +149,7 @@ class Opponent(
     }
 
     private fun MutableList<Card>.getSmallCard(): Card =
-            firstOrNull { it.strength <= 5 && it.keywords.isEmpty() }
+        firstOrNull { it.strength <= 5 && it.keywords.isEmpty() }
             ?: maxBy { it.strength }
 
 

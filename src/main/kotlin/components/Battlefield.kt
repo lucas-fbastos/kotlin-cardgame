@@ -27,7 +27,7 @@ fun Battlefield(
             .requiredWidthIn(
                 min(a = 250.dp, b = 1080.dp)
             )
-            .zIndex(-1f)
+            .zIndex(10f)
 
     ) {
         Row {
