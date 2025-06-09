@@ -78,8 +78,9 @@ class Opponent(
     fun act(player: Player) {
         println("ACT!!!!")
         if (arena.value.size > 0) {
-            val canDefend = canPlayerDefend(player) && playerDefenseWillSurvive(player)
-            if (canDefend && hand.value.size > 0) {
+            val canDefend =  canPlayerDefend(player)
+            val defenderWillSurvive = canDefend && playerDefenseWillSurvive(player)
+            if (defenderWillSurvive && hand.value.size > 0) {
                 println(" PLAY CARD!!!!")
 
                 val cardToPlay = selectCardToPlay(player = player)

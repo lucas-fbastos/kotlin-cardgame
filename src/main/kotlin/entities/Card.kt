@@ -1,6 +1,5 @@
 package entities
 
-import helper.BoardHelper
 import java.util.UUID
 
 data class Card(
@@ -21,22 +20,6 @@ data class Card(
             ?.resolve(target = null, self = this)
             ?: run {
                 alive = false
-            }
-    }
-
-    internal fun defend(
-        player: Player,
-        opponent: Opponent
-    ) {
-        assert(player.attackedBy.value != null)
-        battle(opponent = player.attackedBy.value!!)
-            .also {
-                player.attackedBy.value = null
-                BoardHelper.removeCardsFromBoard(
-                    opponent = opponent,
-                    player = player
-                )
-                player.endTurn(opponent = opponent, player = player, wasPlayerTurn = false)
             }
     }
 

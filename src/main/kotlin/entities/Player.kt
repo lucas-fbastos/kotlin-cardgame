@@ -15,27 +15,36 @@ open class Player(
 ) {
 
     internal fun buyCard() {
-        hand.value
-            .add(deck.value.first())
+        hand.value.add(deck.value.first())
         deck.value.removeFirst()
     }
 
     fun playCard(card: Card) {
-        hand.value = hand.value.toMutableList()
-            .apply { remove(card) }
-        arena.value = arena.value.toMutableList()
-            .apply { add(card) }
+        hand.value = hand.value.toMutableList().apply { remove(card) }
+        arena.value = arena.value.toMutableList().apply { add(card) }
     }
 
-    fun attack(opponent: Opponent, attacker: Card){
+    fun attack(opponent: Opponent, attacker: Card) {
         opponent.setAttackedBy(attacker)
         opponent.defend().also {
             BoardHelper.removeCardsFromBoard(
-                opponent = opponent,
-                player = this
+                opponent = opponent, player = this
             )
             endTurn(opponent = opponent, player = this, wasPlayerTurn = true)
         }
+    }
+
+    internal fun defend(
+        card: Card, opponent: Opponent
+    ) {
+        assert(attackedBy.value != null)
+        card.battle(opponent = attackedBy.value!!).also {
+                attackedBy.value = null
+                BoardHelper.removeCardsFromBoard(
+                    opponent = opponent, player = this
+                )
+                endTurn(opponent = opponent, player = this, wasPlayerTurn = false)
+            }
     }
 
     fun setAttackedBy(attacker: Card) {
@@ -46,17 +55,23 @@ open class Player(
         lifePoints.value = lifePoints.value.dec()
     }
 
+    fun takeDirectHit(opponent: Opponent) =
+        takeHit()
+            .also {
+                attackedBy.value = null
+                endTurn(opponent = opponent, player = this, wasPlayerTurn = false)
+            }
+
     fun endTurn(
         opponent: Opponent,
         player: Player,
         wasPlayerTurn: Boolean,
     ) {
-        if (wasPlayerTurn)
-            BoardHelper.blockPlayer().also {
-                if (player.deck.value.size > 0 && player.hand.value.size < 5) player.buyCard()
-                opponent.act(player = player)
-                return
-            }
+        if (wasPlayerTurn) BoardHelper.blockPlayer().also {
+            if (player.deck.value.size > 0 && player.hand.value.size < 5) player.buyCard()
+            opponent.act(player = player)
+            return
+        }
         BoardHelper.releasePlayer()
         BoardHelper.increaseTurn().also {
             if (opponent.deck.value.size > 0 && opponent.hand.value.size < 5) opponent.buyCard()

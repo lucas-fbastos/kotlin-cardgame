@@ -1,10 +1,10 @@
 @file:Suppress("FunctionName")
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -21,6 +21,9 @@ import androidx.compose.ui.zIndex
 import components.Battlefield
 import components.OpponentHand
 import components.PlayerHand
+import components.shared.StatItem
+import constants.COLOR_BACKGROUND
+import constants.COLOR_PRIMARY
 import entities.Card
 import entities.Opponent
 import entities.Player
@@ -33,6 +36,7 @@ fun App() {
     val (playerCards, opponentCards, playerHand, opponentHand) = seed()
         .chunked(size = 5)
         .toMutableList()
+
     val turn by BoardHelper.turn.collectAsState()
     var canPlay: Boolean by rememberSaveable { mutableStateOf(true) }
     val opponent: Opponent by rememberSaveable {
@@ -56,46 +60,41 @@ fun App() {
     if (player.lifePoints.value == 0) endGame(playerWon = false).also { canPlay = false }
 
     MaterialTheme {
-        Column(
+        Box(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-                .width(width = 1200.dp)
-                .zIndex(1f),
-
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
+                .background(COLOR_BACKGROUND)
         ) {
-            Row {
-                Text("DEBUG MENU ")
-                Button(
-                    onClick = {
-                        BoardHelper.releasePlayer()
-                        BoardHelper.increaseTurn()
-                    },
-                    modifier = Modifier.padding(vertical = 20.dp)
-                ) {
-                    Text("change turn")
-                }
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+                    .width(width = 1200.dp)
+                    .zIndex(1f),
+
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                StatItem(
+                    label = "Turn",
+                    value = turn.toString(),
+                    color = COLOR_PRIMARY,
+                    isEmphasis = true,
+                )
+
+                OpponentHand(opponent = opponent)
+
+                Battlefield(
+                    player = player,
+                    opponent = opponent,
+                )
+
+                PlayerHand(
+                    player = player,
+                    opponent = opponent,
+                    canPlay = canPlay,
+                )
             }
-
-            Text(text = "TURN: $turn")
-
-            OpponentHand(opponent = opponent)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Battlefield(
-                player = player,
-                opponent = opponent,
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PlayerHand(
-                player = player,
-                opponent = opponent,
-                canPlay = canPlay,
-            )
         }
     }
 }

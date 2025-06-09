@@ -4,33 +4,47 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import constants.BLACK
-import constants.GRAY
-import constants.LIGHT_PURPLE
-import constants.PURPLE
 import entities.Card
 import entities.Opponent
 import entities.Player
@@ -51,26 +65,43 @@ fun PlayerCard(
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
     var isPlayed by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .padding(5.dp)
-            .size(
-                width = 181.dp,
-                height = 281.dp
-            )
+            .size(width = 181.dp, height = 281.dp)
             .offset {
                 IntOffset(
                     x = offset.x.roundToInt(),
                     y = offset.y.roundToInt()
                 )
             }
+            .clip(RoundedCornerShape(16.dp))
             .background(
-                color = Color.Red,
-                shape = RoundedCornerShape(2.dp)
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF2A2A3E),
+                        Color(0xFF1A1A2E),
+                        Color(0xFF0F0F1F)
+                    )
+                )
             )
             .border(
-                width = 1.dp,
-                color = Color( 255, 255, 255, 25)
+                width = 2.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF8B5CF6),
+                        Color(0xFFE879F9),
+                        Color(0xFF8B5CF6)
+                    )
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(16.dp),
+                ambientColor = Color(0xFF8B5CF6).copy(alpha = 0.3f),
+                spotColor = Color(0xFF8B5CF6).copy(alpha = 0.3f)
             )
             .onGloballyPositioned { layoutCoordinates ->
                 cardPosition = layoutCoordinates.positionInRoot()
@@ -84,11 +115,7 @@ fun PlayerCard(
                     detectDragGestures(
                         onDragEnd = {
                             val handTopBoundary = handPosition.y
-
-                            // Calculate the current position of the card (top + current offset)
                             val currentCardY = cardPosition.y + offset.y
-
-                            // Check if the card is significantly above the hand area (add some threshold)
                             val dragThreshold = 30f
                             val isOutsideParent = currentCardY < (handTopBoundary - dragThreshold)
 
@@ -103,7 +130,7 @@ fun PlayerCard(
                                 )
                             } else {
                                 println("INSIDE - Card Y: $currentCardY, Hand Y: $handTopBoundary")
-                                offset = Offset(0f, 0f) // Reset position
+                                offset = Offset(0f, 0f)
                             }
                         },
                         onDrag = { dragAmount ->
@@ -116,90 +143,127 @@ fun PlayerCard(
                 }
             }
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .size(181.dp, 281.dp)
-                .background(
-                    color = Color(color = PURPLE),
-                    shape = RoundedCornerShape(4.dp)
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = card.name,
+                    modifier = Modifier.weight(1f),
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
-                .border(
-                    width = 1.dp,
-                    color = Color.Black
-                )
-                .shadow(4.dp, shape = RoundedCornerShape(4.dp))
-        )
 
-        Box(
-            modifier = Modifier
-                .offset(x = 7.dp, y = 6.dp)
-                .size(167.dp, 269.dp)
-                .background(color = Color(color = BLACK))
-        )
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    Color(0xFF8B5CF6),
+                                    Color(0xFF6D28D9)
+                                )
+                            ),
+                            shape = CircleShape
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = Color.White.copy(alpha = 0.8f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = card.strength.toString(),
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
 
-        Box(
-            modifier = Modifier
-                .offset(x = 14.dp, y = 66.dp)
-                .size(152.dp, 92.dp)
-                .background(color = Color(GRAY))
-                .shadow(4.dp, shape = RoundedCornerShape(10.dp))
-        )
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Box(
-            modifier = Modifier
-                .offset(x = 14.dp, y = 13.dp)
-                .size(157.dp, 16.dp)
-                .background(color = Color(color = GRAY))
-                .shadow(4.dp, shape = RoundedCornerShape(10.dp))
-        )
-
-        Box(
-            modifier = Modifier
-                .offset(x = 14.dp, y = 44.dp)
-                .size(152.dp, 107.dp)
-                .background(color = Color(color = GRAY))
-        )
-
-        Box(
-            modifier = Modifier
-                .offset(x = 151.dp, y = 13.dp)
-                .size(20.dp, 16.dp)
-                .background(color = Color(LIGHT_PURPLE).copy(alpha = 0.41f))
-        )
-
-        Text(
-            text = "${card.strength}",
-            modifier = Modifier
-                .offset(x = 157.dp, y = 13.dp)
-                .background(Color.Transparent), // No background
-            fontSize = 12.sp,
-            lineHeight = 15.sp,
-        )
-
-        Text(
-            text = card.name,
-            modifier = Modifier
-                .offset(x = 33.dp, y = 13.dp),
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 12.sp,
-            lineHeight = 15.sp,
-            color = Color.Black
-        )
-
-        card.flavorText?.let {
-            Text(
-                text = it,
+            // Main card image area
+            Box(
                 modifier = Modifier
-                    .offset(x = 26.dp, y = 197.dp),
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Light,
-                fontSize = 12.sp,
-                lineHeight = 15.sp,
-                color = Color.White
-            )
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF4C1D95),
+                                Color(0xFF312E81),
+                                Color(0xFF1E1B4B)
+                            )
+                        )
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFF8B5CF6).copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            ) {
+                // Placeholder for card artwork
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Card Artwork",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .align(Alignment.Center),
+                    tint = Color(0xFF8B5CF6).copy(alpha = 0.5f)
+                )
+
+                // Keywords overlay
+                if (card.keywords.isNotEmpty()) {
+                    LazyRow(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(card.keywords) { keyword ->
+                            KeywordBadge(keyword = keyword)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            card.flavorText?.let { flavorText ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Color(0xFF1F1F35),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = flavorText,
+                        color = Color(0xFFD1D5DB),
+                        fontSize = 11.sp,
+                        fontStyle = FontStyle.Italic,
+                        lineHeight = 14.sp,
+                        textAlign = TextAlign.Center,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
-
     }
-
 }

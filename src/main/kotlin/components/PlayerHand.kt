@@ -1,25 +1,30 @@
 package components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import components.shared.StatItem
+import constants.COLOR_BACKGROUND
+import constants.COLOR_BORDER
+import constants.COLOR_PRIMARY
+import constants.COLOR_RED
+import constants.COLOR_SURFACE
+import constants.COLOR_TEXT_PRIMARY
+import constants.COLOR_TEXT_SECONDARY
 import entities.Opponent
 import entities.Player
+
 
 @Composable
 fun PlayerHand(
@@ -30,73 +35,128 @@ fun PlayerHand(
     var positionHand by remember { mutableStateOf(Offset.Zero) }
     var sizeHand by remember { mutableStateOf(Offset.Zero) }
 
-    Row(
+
+    Column{
+        player.attackedBy.value?.let {
+            ActionButton(
+                text = "Take Damage",
+                onClick = { player.takeDirectHit(opponent = opponent)},
+                backgroundColor = COLOR_RED,
+            )
+        }
+    }
+
+    Column(
         modifier = Modifier
-            .height(20.dp)
+            .fillMaxWidth()
+            .background(COLOR_BACKGROUND)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Text(
-            text = "Health: ${player.lifePoints.value}",
-            color = Color.Red
+
+        PlayerStats(player = player, opponent  = opponent)
+
+        CardHandArea(
+            player = player,
+            opponent = opponent,
+            canPlay = canPlay,
+            onPositionChanged = { position, size ->
+                positionHand = position
+                sizeHand = size
+            }
         )
     }
-    Row {
-        Text(
-            text = "Mindbugs: ${player.amountOfMindBugs}",
-            color = Color.Black
-        )
-    }
-    Row {
-        Text(
-            text = "Cards: ${player.hand.value.size}",
-            color = Color.Black
-        )
-    }
-    Row {
-        Text(
-            text = "Deck: ${player.deck.value.size}",
-            color = Color.Black
-        )
-    }
-    Row {
-        Text(
-            text = "Arena: ${player.arena.value.size}",
-            color = Color.Black
-        )
-    }
-    Row {
-        Text(
-            text = "Graveyard: ${player.discardPile.value.size}",
-            color = Color.Black
-        )
-    }
+}
+
+@Composable
+private fun PlayerStats(player: Player) {
     Row(
         modifier = Modifier
-            .height(400.dp)
+            .fillMaxWidth()
+            .background(
+                color = COLOR_SURFACE,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Health - emphasized as most important stat
+        StatItem(
+            label = "HP",
+            value = player.lifePoints.value.toString(),
+            color = COLOR_RED,
+            isEmphasis = true
+        )
+
+        // Other stats in compact format
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StatItem("Mind Bugs", player.amountOfMindBugs.toString(), COLOR_PRIMARY)
+            StatItem("Hand", player.hand.value.size.toString(), COLOR_TEXT_PRIMARY)
+            StatItem("Deck", player.deck.value.size.toString(), COLOR_TEXT_SECONDARY)
+            StatItem("Arena", player.arena.value.size.toString(), COLOR_TEXT_SECONDARY)
+            StatItem("Grave", player.discardPile.value.size.toString(), COLOR_TEXT_SECONDARY)
+        }
+    }
+}
+
+@Composable
+private fun CardHandArea(
+    player: Player,
+    opponent: Opponent,
+    canPlay: Boolean,
+    onPositionChanged: (Offset, Offset) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(
+                color = COLOR_SURFACE,
+                shape = RoundedCornerShape(12.dp)
+            )
             .border(
-                width = 5.dp,
-                shape = RoundedCornerShape(
-                    size = 5.dp
-                ),
-                color = Color.Red
-            ).onGloballyPositioned { layoutCoordinates ->
-                positionHand = layoutCoordinates.positionInRoot()
-                sizeHand = Offset(
+                width = 1.dp,
+                color = COLOR_BORDER,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .onGloballyPositioned { layoutCoordinates ->
+                val position = layoutCoordinates.positionInRoot()
+                val size = Offset(
                     x = layoutCoordinates.size.width.toFloat(),
                     y = layoutCoordinates.size.height.toFloat()
                 )
-            },
-        verticalAlignment = Alignment.CenterVertically
+                onPositionChanged(position, size)
+            }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // Instead of wrapping the forEach with key, use key for each individual item
-        player.hand.value.forEach { card ->
-            // Use card's id as the key to help Compose track individual cards
-            key(card.id) {
-                PlayerCard(
-                    canPlay = canPlay,
-                    handPosition = positionHand,
-                    card = card,
-                    player = player,
-                    opponent = opponent,
+        if(player.hand.value.isNotEmpty()){
+            player.hand.value.forEach { card ->
+                key(card.id) {
+                    PlayerCard(
+                        canPlay = canPlay,
+                        handPosition = Offset.Zero,
+                        card = card,
+                        player = player,
+                        opponent = opponent,
+                    )
+                }
+            }
+        }else{
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No cards in hand",
+                    color = COLOR_TEXT_SECONDARY,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

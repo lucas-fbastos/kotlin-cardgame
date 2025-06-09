@@ -1,9 +1,10 @@
 ### TODO LIST
+- add icon pack
+- see bug opponent playing multiple cards
+- improve logging when cards battle
 - implement you win screen
-- implement a way of setting the defender, even when there is no card available to defend.
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
-- improve logging when cards battle
 - create refined strategy for opponent to check cards before selecting the attacker 
 - add animations to play card and attack card (opponent and player) play card animation can control the delay of the opponent action
 - add life bar for opponent and player
@@ -42,3 +43,5 @@
 - REFACTORED THE TURN CHANGE, GOT RID OF THAT NASTY ONPLAYCHANGE WORKAROUND 
 - attack feature for player
 - player doing direct hit when opponent has no defense
+- implement a way of setting the defender, even when there is no card available to defend.
+- UI redone
