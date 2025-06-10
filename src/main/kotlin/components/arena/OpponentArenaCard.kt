@@ -1,4 +1,4 @@
-package components
+package components.arena
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,15 +16,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.twotone.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
@@ -44,18 +38,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import constants.COLOR_GREEN
+import components.shared.KeywordBadge
 import entities.Card
-import entities.Keyword
-import entities.Opponent
-import entities.Player
 import kotlin.math.roundToInt
 
 @Composable
-fun ArenaCard(
-    card: Card,
-    player: Player,
-    opponent: Opponent,
+fun OpponentArenaCard(
+    card: Card
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -75,8 +64,9 @@ fun ArenaCard(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF2A2A3E),
-                        Color(0xFF1A1A2E)
+                        Color(0xFF3E2A2A),
+                        Color(0xFF2E1A1A),
+                        Color(0xFF1F0F0F)
                     )
                 )
             )
@@ -84,8 +74,8 @@ fun ArenaCard(
                 width = 2.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFF8B5CF6),
-                        Color(0xFFE879F9)
+                        Color(0xFFE67E22),
+                        Color(0xFFE67f44),
                     )
                 ),
                 shape = RoundedCornerShape(12.dp)
@@ -108,9 +98,9 @@ fun ArenaCard(
                     .background(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                Color(0xFF4C1D95),
-                                Color(0xFF312E81),
-                                Color(0xFF1E1B4B)
+                                Color(0xFF3E2A2A),
+                                Color(0xFF2E1A1A),
+                                Color(0xFF1F0F0F)
                             )
                         )
                     )
@@ -132,15 +122,14 @@ fun ArenaCard(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    // Strength badge
                     Box(
                         modifier = Modifier
                             .size(32.dp)
                             .background(
                                 brush = Brush.radialGradient(
                                     colors = listOf(
-                                        Color(0xFF8B5CF6),
-                                        Color(0xFF6D28D9)
+                                        Color(0xFFE67E22),
+                                        Color(0xFFE67f44),
                                     )
                                 ),
                                 shape = CircleShape
@@ -170,7 +159,7 @@ fun ArenaCard(
                     modifier = Modifier
                         .size(80.dp)
                         .align(Alignment.Center),
-                    tint = Color(0xFF8B5CF6).copy(alpha = 0.6f)
+                    tint = Color(0xFFE67E22).copy(alpha = 0.6f)
                 )
 
                 // Keywords overlay on image
@@ -191,103 +180,10 @@ fun ArenaCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(75.dp) // 30% of 250dp
-                    .background(Color(0xFF1F1F35))
+                    .background(Color(0xff2e1907))
                     .padding(8.dp)
-            ) {
-                when {
-                    player.attackedBy.value != null && card.playerOwned && card.canDefend(attacker = player.attackedBy.value!!) -> {
-                        ActionButton(
-                            text = "DEFEND",
-                            onClick = { player.defend(opponent = opponent, card = card) },
-                            backgroundColor = COLOR_GREEN,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                    card.playerOwned && player.attackedBy.value == null -> {
-                        ActionButton(
-                            text = "ATTACK",
-                            onClick = { player.attack(opponent = opponent, attacker = card) },
-                            backgroundColor = Color(0xFFDC2626),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                    card.playerOwned -> {
-                        Text(
-                            text = "Under Attack",
-                            color = Color(0xFFEF4444),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
-            }
+            )
         }
     }
 }
 
-@Composable
-fun KeywordBadge(keyword: Keyword) {
-    val (icon, color) = getKeywordIconAndColor(keyword.getType().name)
-
-    Box(
-        modifier = Modifier
-            .background(
-                color = color.copy(alpha = 0.9f),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = Color.White.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = keyword.getType().name,
-            modifier = Modifier.size(16.dp),
-            tint = Color.White
-        )
-    }
-}
-
-@Composable
-fun ActionButton(
-    text: String,
-    onClick: () -> Unit,
-    backgroundColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .height(32.dp)
-            .fillMaxWidth(0.8f),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 2.dp
-        )
-    ) {
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-private fun getKeywordIconAndColor(keywordName: String): Pair<ImageVector, Color> {
-    return when (keywordName.lowercase()) {
-        "poison" -> Pair(Icons.Default.Warning, Color(0xFF10B981)) // Skull alternative
-        "tough" -> Pair(Icons.Default.FavoriteBorder, Color(0xFF6B7280))
-        "sneaky" -> Pair(Icons.TwoTone.Clear, Color(0xFF8B5CF6))
-        else -> Pair(Icons.Default.Star, Color(0xFF8B5CF6))
-    }
-}

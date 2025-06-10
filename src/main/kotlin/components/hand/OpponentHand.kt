@@ -1,4 +1,4 @@
-package components
+package components.hand
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import components.OpponentCard
+import components.shared.StatItem
 import constants.COLOR_BACKGROUND
 import constants.COLOR_BORDER
 import constants.COLOR_PRIMARY
@@ -69,11 +71,11 @@ private fun OpponentStats(opponent: Opponent) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OpponentStatItem("MB", opponent.amountOfMindBugs.toString(), COLOR_PRIMARY)
-            OpponentStatItem("Hand", opponent.hand.value.size.toString(), COLOR_TEXT_PRIMARY)
-            OpponentStatItem("Deck", opponent.deck.value.size.toString(), COLOR_TEXT_SECONDARY)
-            OpponentStatItem("Arena", opponent.arena.value.size.toString(), COLOR_TEXT_SECONDARY)
-            OpponentStatItem("GY", opponent.discardPile.value.size.toString(), COLOR_TEXT_SECONDARY)
+            StatItem("Mind Bugs", opponent.amountOfMindBugs.toString(), COLOR_PRIMARY)
+            StatItem("Hand", opponent.hand.value.size.toString(), COLOR_TEXT_PRIMARY)
+            StatItem("Deck", opponent.deck.value.size.toString(), COLOR_TEXT_SECONDARY)
+            StatItem("Arena", opponent.arena.value.size.toString(), COLOR_TEXT_SECONDARY)
+            StatItem("Grave", opponent.discardPile.value.size.toString(), COLOR_TEXT_SECONDARY)
         }
     }
 }
@@ -138,7 +140,7 @@ private fun OpponentCardHandArea(opponent: Opponent) {
         } else {
             opponent.hand.value.forEach { card ->
                 key(card.id) {
-                    SimpleOpponentCard(card = card)
+                    OpponentCard(card = card)
                 }
             }
         }

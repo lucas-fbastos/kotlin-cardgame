@@ -18,9 +18,9 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidx.compose.ui.zIndex
-import components.Battlefield
-import components.OpponentHand
-import components.PlayerHand
+import components.arena.Battlefield
+import components.hand.OpponentHand
+import components.hand.PlayerHand
 import components.shared.StatItem
 import constants.COLOR_BACKGROUND
 import constants.COLOR_PRIMARY

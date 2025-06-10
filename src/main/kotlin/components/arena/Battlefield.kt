@@ -1,4 +1,4 @@
-package components
+package components.arena
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +30,8 @@ fun Battlefield(
         Row {
             opponent.arena.value.forEach { card: Card ->
                 Column {
-                    ArenaCard(
+                    OpponentArenaCard(
                         card = card,
-                        player = player,
-                        opponent = opponent,
                     )
                 }
             }

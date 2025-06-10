@@ -14,3 +14,5 @@ internal val COLOR_GREEN = Color(0xFF059669)
 
 
 internal const val DEFAULT_ANIMATION_DURATION = 700
+
+typealias CustomIcons = me.localx.icons.straight.Icons.Bold

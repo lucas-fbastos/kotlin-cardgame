@@ -1,6 +1,8 @@
 ### TODO LIST
-- add icon pack
-- see bug opponent playing multiple cards
+- get all colors in commons 
+- indicative of attacker
+- extra row of cards when arena is too big
+- see bug last card become unplayable
 - improve logging when cards battle
 - implement you win screen
 - finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
@@ -10,6 +12,7 @@
 - add life bar for opponent and player
 
 ###  DONE
+- add icon pack
 - player basics
 - card skeleton
 - opponent util methods 

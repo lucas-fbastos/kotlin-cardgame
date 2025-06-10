@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import entities.Card
 
 @Composable
-fun SimpleOpponentCard(
+fun OpponentCard(
     card: Card
 ) {
     Box(

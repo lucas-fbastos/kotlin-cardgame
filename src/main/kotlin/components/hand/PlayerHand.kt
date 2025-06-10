@@ -1,4 +1,4 @@
-package components
+package components.hand
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +14,8 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import components.PlayerCard
+import components.arena.ActionButton
 import components.shared.StatItem
 import constants.COLOR_BACKGROUND
 import constants.COLOR_BORDER
@@ -54,7 +56,7 @@ fun PlayerHand(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
 
-        PlayerStats(player = player, opponent  = opponent)
+        PlayerStats(player = player)
 
         CardHandArea(
             player = player,
@@ -81,7 +83,6 @@ private fun PlayerStats(player: Player) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Health - emphasized as most important stat
         StatItem(
             label = "HP",
             value = player.lifePoints.value.toString(),
@@ -89,7 +90,6 @@ private fun PlayerStats(player: Player) {
             isEmphasis = true
         )
 
-        // Other stats in compact format
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
