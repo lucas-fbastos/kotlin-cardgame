@@ -1,6 +1,7 @@
 package components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -36,6 +37,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontStyle
@@ -216,8 +218,16 @@ fun PlayerCard(
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
-                // Placeholder for card artwork
-                Icon(
+
+                card.image?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Card Artwork",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                } ?: Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = "Card Artwork",
                     modifier = Modifier

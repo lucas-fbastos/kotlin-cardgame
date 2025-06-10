@@ -1,5 +1,6 @@
 package components.arena
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,19 +8,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +31,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
+import constants.CARD_STRENGTH_GRADIENT
+import constants.COLOR_DARK_ORANGE
+import constants.OPPONENT_BACKGROUND_GRADIENT
+import constants.OPPONENT_BORDER_GRADIENT
 import entities.Card
 import kotlin.math.roundToInt
 
@@ -63,20 +67,13 @@ fun OpponentArenaCard(
             .clip(RoundedCornerShape(12.dp))
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF3E2A2A),
-                        Color(0xFF2E1A1A),
-                        Color(0xFF1F0F0F)
-                    )
+                    colors = OPPONENT_BACKGROUND_GRADIENT
                 )
             )
             .border(
                 width = 2.dp,
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFFE67E22),
-                        Color(0xFFE67f44),
-                    )
+                    colors = OPPONENT_BORDER_GRADIENT
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -97,40 +94,38 @@ fun OpponentArenaCard(
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                     .background(
                         brush = Brush.radialGradient(
-                            colors = listOf(
-                                Color(0xFF3E2A2A),
-                                Color(0xFF2E1A1A),
-                                Color(0xFF1F0F0F)
-                            )
+                            colors = OPPONENT_BACKGROUND_GRADIENT
                         )
                     )
             ) {
                 // Header with name and strength
+                // Background card image that fills the entire box
+                card.image?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Card Artwork Background",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Card name
-                    Text(
-                        text = card.name,
-                        modifier = Modifier.weight(1f),
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Spacer(modifier = Modifier.width(8.dp))
 
+                    // Strength
                     Box(
                         modifier = Modifier
                             .size(32.dp)
                             .background(
                                 brush = Brush.radialGradient(
-                                    colors = listOf(
-                                        Color(0xFFE67E22),
-                                        Color(0xFFE67f44),
-                                    )
+                                    colors = CARD_STRENGTH_GRADIENT
                                 ),
                                 shape = CircleShape
                             )
@@ -150,18 +145,6 @@ fun OpponentArenaCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Placeholder for card image
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "Card Image",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.Center),
-                    tint = Color(0xFFE67E22).copy(alpha = 0.6f)
-                )
-
                 // Keywords overlay on image
                 LazyRow(
                     modifier = Modifier
@@ -180,7 +163,7 @@ fun OpponentArenaCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(75.dp) // 30% of 250dp
-                    .background(Color(0xff2e1907))
+                    .background(COLOR_DARK_ORANGE)
                     .padding(8.dp)
             )
         }

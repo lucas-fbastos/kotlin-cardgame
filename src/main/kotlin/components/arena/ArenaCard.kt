@@ -1,5 +1,6 @@
 package components.arena
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,11 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -21,8 +24,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,14 +36,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
+import constants.CARD_BACKGROUND_GRADIENT
+import constants.CARD_BORDER_GRADIENT
+import constants.CARD_STRENGTH_GRADIENT
+import constants.COLOR_DARK_PURPLE
+import constants.COLOR_PURPLE
 import constants.COLOR_SECONDARY
 import constants.CustomIcon
 import entities.Card
@@ -75,19 +81,13 @@ fun ArenaCard(
             .clip(RoundedCornerShape(12.dp))
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF2A2A3E),
-                        Color(0xFF1A1A2E)
-                    )
+                    colors = CARD_BACKGROUND_GRADIENT
                 )
             )
             .border(
                 width = 2.dp,
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF8B5CF6),
-                        Color(0xFFE879F9)
-                    )
+                    colors = CARD_BORDER_GRADIENT
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -116,32 +116,33 @@ fun ArenaCard(
                         )
                     )
             ) {
-                // Header with name and strength
+                // Background card image that fills the entire box
+                card.image?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Card Artwork Background",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Card name
-                    Text(
-                        text = card.name,
-                        modifier = Modifier.weight(1f),
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Spacer(modifier = Modifier.width(8.dp))
 
+                    // Strength
                     Box(
                         modifier = Modifier
                             .size(32.dp)
                             .background(
                                 brush = Brush.radialGradient(
-                                    colors = listOf(
-                                        Color(0xFF8B5CF6),
-                                        Color(0xFF6D28D9)
-                                    )
+                                    colors = CARD_STRENGTH_GRADIENT
                                 ),
                                 shape = CircleShape
                             )
@@ -161,27 +162,17 @@ fun ArenaCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Placeholder for card image
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "Card Image",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.Center),
-                    tint = Color(0xFF8B5CF6).copy(alpha = 0.6f)
-                )
-
-                // Keywords overlay on image
-                LazyRow(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(card.keywords) { keyword ->
-                        KeywordBadge(keyword = keyword)
+                // Keywords overlay at bottom
+                if (card.keywords.isNotEmpty()) {
+                    LazyRow(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(card.keywords) { keyword ->
+                            KeywordBadge(keyword = keyword)
+                        }
                     }
                 }
             }
@@ -191,7 +182,7 @@ fun ArenaCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(75.dp) // 30% of 250dp
-                    .background(Color(0xFF1F1F35))
+                    .background(COLOR_DARK_PURPLE)
                     .padding(8.dp)
             ) {
                 when {
@@ -202,7 +193,7 @@ fun ArenaCard(
                                 .align(Alignment.Center)
                                 .border(
                                     width = 1.dp,
-                                    color = Color(0xFF8B5CF6).copy(alpha = 0.3f),
+                                    color = COLOR_PURPLE.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         ){
@@ -210,9 +201,8 @@ fun ArenaCard(
                                 painter = rememberVectorPainter(CustomIcon.Shield),
                                 contentDescription = null,
                                 modifier = Modifier.size(40.dp),
-                                tint = Color(0xFF8B5CF6).copy(alpha = 0.6f),
+                                tint = COLOR_PURPLE.copy(alpha = 0.6f),
                             )
-
                         }
                     }
                     card.playerOwned && player.attackedBy.value == null -> {
@@ -226,13 +216,12 @@ fun ArenaCard(
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         ){
-                             Icon(
-                                 painter = rememberVectorPainter(CustomIcon.BoxingGlove),
-                                 contentDescription = null,
-                                 modifier = Modifier.size(40.dp),
-                                 tint = Color(0xFF8B5CF6).copy(alpha = 0.6f),
-                             )
-
+                            Icon(
+                                painter = rememberVectorPainter(CustomIcon.BoxingGlove),
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp),
+                                tint = COLOR_PURPLE.copy(alpha = 0.6f),
+                            )
                         }
                     }
                     card.playerOwned -> {
@@ -243,7 +232,7 @@ fun ArenaCard(
                                 .align(Alignment.Center)
                                 .border(
                                     width = 1.dp,
-                                    color = Color(0xFF8B5CF6).copy(alpha = 0.3f),
+                                    color = COLOR_PURPLE.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         ){
@@ -253,7 +242,6 @@ fun ArenaCard(
                                 modifier = Modifier.size(40.dp),
                                 tint = COLOR_SECONDARY.copy(alpha = 0.9f),
                             )
-
                         }
                     }
                 }

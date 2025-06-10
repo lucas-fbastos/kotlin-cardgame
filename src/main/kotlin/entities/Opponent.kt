@@ -43,7 +43,7 @@ class Opponent(
         println("DEFEND!!!!!")
         assert(this.attackedBy.value != null)
         val attacker: Card = this.attackedBy.value!!
-        if(attacker.isSneaky() && arena.value.any { it.isSneaky() } || arena.value.isEmpty()) {
+        if(attacker.isSneaky() && !arena.value.any { it.isSneaky() } || arena.value.isEmpty()) {
             takeHit()
             return
         }

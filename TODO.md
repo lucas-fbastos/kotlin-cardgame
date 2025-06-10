@@ -12,7 +12,6 @@
 - add life bar for opponent and player
 
 ###  DONE
-- add icon pack
 - player basics
 - card skeleton
 - opponent util methods 
@@ -48,3 +47,6 @@
 - player doing direct hit when opponent has no defense
 - implement a way of setting the defender, even when there is no card available to defend.
 - UI redone
+- added icon pack
+- added first images for cards (deadly hamster and phone stealer otter, thanks Vivi <3)
+- fix defend bug when a non-sneaky card could block sneaky cards

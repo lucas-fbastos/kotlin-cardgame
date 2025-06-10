@@ -1,5 +1,7 @@
 package seeder
 
+import constants.deadlyHamsterRef
+import constants.phoneStealerOtterRef
 import entities.Card
 import entities.Poisonous
 import entities.Sneaky
@@ -25,6 +27,7 @@ private fun createDeadlyHamster() : Card = Card(
     name = "Deadly Hamster",
     strength = 5,
     flavorText = "DANGEROUS CREATURE",
+    image = deadlyHamsterRef
 )
 
 private fun createAssassinHedgehog() : Card = Card(
@@ -38,5 +41,6 @@ private fun createPhoneStealerOtter() : Card = Card(
     name = "Phone Stealer Otter",
     strength = 3,
     flavorText = "Stay alert, check your purses - NOW!",
-    keywords = listOf(Sneaky())
+    keywords = listOf(Sneaky()),
+    image = phoneStealerOtterRef
 )

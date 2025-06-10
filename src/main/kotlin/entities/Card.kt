@@ -1,5 +1,6 @@
 package entities
 
+import androidx.compose.ui.graphics.ImageBitmap
 import java.util.UUID
 
 data class Card(
@@ -11,6 +12,7 @@ data class Card(
     var alive: Boolean = true,
     var playerOwned: Boolean = true,
     var resistance: Boolean = false,
+    var image : ImageBitmap? = null,
     val keywords: List<Keyword> = emptyList()
 ) {
 
