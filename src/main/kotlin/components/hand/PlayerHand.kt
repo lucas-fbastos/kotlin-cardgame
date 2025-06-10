@@ -2,10 +2,22 @@ package components.hand
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -16,13 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.PlayerCard
 import components.arena.ActionButton
-import components.shared.StatItem
+import components.shared.Stats
 import constants.COLOR_BACKGROUND
 import constants.COLOR_BORDER
-import constants.COLOR_PRIMARY
 import constants.COLOR_RED
 import constants.COLOR_SURFACE
-import constants.COLOR_TEXT_PRIMARY
 import constants.COLOR_TEXT_SECONDARY
 import entities.Opponent
 import entities.Player
@@ -56,7 +66,7 @@ fun PlayerHand(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
 
-        PlayerStats(player = player)
+        Stats(player = player)
 
         CardHandArea(
             player = player,
@@ -67,39 +77,6 @@ fun PlayerHand(
                 sizeHand = size
             }
         )
-    }
-}
-
-@Composable
-private fun PlayerStats(player: Player) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = COLOR_SURFACE,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        StatItem(
-            label = "HP",
-            value = player.lifePoints.value.toString(),
-            color = COLOR_RED,
-            isEmphasis = true
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            StatItem("Mind Bugs", player.amountOfMindBugs.toString(), COLOR_PRIMARY)
-            StatItem("Hand", player.hand.value.size.toString(), COLOR_TEXT_PRIMARY)
-            StatItem("Deck", player.deck.value.size.toString(), COLOR_TEXT_SECONDARY)
-            StatItem("Arena", player.arena.value.size.toString(), COLOR_TEXT_SECONDARY)
-            StatItem("Grave", player.discardPile.value.size.toString(), COLOR_TEXT_SECONDARY)
-        }
     }
 }
 

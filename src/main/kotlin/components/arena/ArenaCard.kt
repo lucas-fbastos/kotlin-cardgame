@@ -44,12 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
 import constants.COLOR_SECONDARY
-import constants.CustomIcons
+import constants.CustomIcon
 import entities.Card
 import entities.Opponent
 import entities.Player
-import me.localx.icons.straight.bold.BoxingGlove
-import me.localx.icons.straight.bold.Shield
+import me.localx.icons.straight.filled.BoxingGlove
+import me.localx.icons.straight.filled.Shield
 import kotlin.math.roundToInt
 
 @Composable
@@ -207,7 +207,7 @@ fun ArenaCard(
                                 )
                         ){
                             Icon(
-                                painter = rememberVectorPainter(CustomIcons.Shield),
+                                painter = rememberVectorPainter(CustomIcon.Shield),
                                 contentDescription = null,
                                 modifier = Modifier.size(40.dp),
                                 tint = Color(0xFF8B5CF6).copy(alpha = 0.6f),
@@ -227,7 +227,7 @@ fun ArenaCard(
                                 )
                         ){
                              Icon(
-                                 painter = rememberVectorPainter(CustomIcons.BoxingGlove),
+                                 painter = rememberVectorPainter(CustomIcon.BoxingGlove),
                                  contentDescription = null,
                                  modifier = Modifier.size(40.dp),
                                  tint = Color(0xFF8B5CF6).copy(alpha = 0.6f),
@@ -248,7 +248,7 @@ fun ArenaCard(
                                 )
                         ){
                             Icon(
-                                painter = rememberVectorPainter(CustomIcons.Shield),
+                                painter = rememberVectorPainter(CustomIcon.Shield),
                                 contentDescription = null,
                                 modifier = Modifier.size(40.dp),
                                 tint = COLOR_SECONDARY.copy(alpha = 0.9f),
