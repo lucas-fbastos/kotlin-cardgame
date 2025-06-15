@@ -1,5 +1,7 @@
 package helper
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import entities.Opponent
 import entities.Player
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,7 @@ class BoardHelper{
         private val _turn = MutableStateFlow(1)
         val turn: StateFlow<Int> = _turn.asStateFlow()
         @JvmStatic
-        private var canPlay: Boolean = true
+         var canPlay : MutableState<Boolean> = mutableStateOf(value = true)
 
         fun getTurn() : Int = _turn.value
 
@@ -23,9 +25,9 @@ class BoardHelper{
             return _turn.value
         }
 
-        fun blockPlayer() {  canPlay = false }
+        fun blockPlayer() {  canPlay.value = false }
 
-        fun releasePlayer() { canPlay = true }
+        fun releasePlayer() { canPlay.value = true }
 
         fun removeCardsFromBoard(
             opponent: Opponent,

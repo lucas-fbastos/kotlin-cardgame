@@ -1,6 +1,8 @@
 package entities
 
 import androidx.compose.ui.graphics.ImageBitmap
+import entities.keywords.Keyword
+import entities.keywords.KeywordType
 import java.util.UUID
 
 data class Card(
@@ -29,6 +31,7 @@ data class Card(
         println("BATTLE!!!")
         println(" ATTACKER: ${this.name}")
         println(" DEFENDER: ${opponent.name}")
+
         val hit = this.keywords
             .firstOrNull { it.getType() == KeywordType.POISONOUS }
             ?.resolve(target = opponent, self = this)
@@ -51,7 +54,6 @@ data class Card(
         } else if (opponent.strength < this.strength && !hit) {
             opponent.die()
         }
-
     }
 
     fun canDefend(attacker: Card): Boolean = attacker.keywords
@@ -60,46 +62,15 @@ data class Card(
             this.keywords.any { it.getType() == KeywordType.SNEAKY }
         } ?: true
 
+
+    fun refreshKeywords(){
+        keywords
+            .firstOrNull{ it.getType() == KeywordType.FRENZY}
+            ?.refresh()
+    }
 }
 
-interface Keyword {
-    fun resolve(target: Card?, self: Card)
-
-    fun getType(): KeywordType
-}
-
-enum class KeywordType {
-    SNEAKY,
-    POISONOUS,
-    TOUGH
-}
 
 interface Ability {
     fun resolve(target: Card?)
-}
-
-class Poisonous : Keyword {
-    override fun resolve(target: Card?, self: Card) {
-        target?.die()
-    }
-
-    override fun getType(): KeywordType = KeywordType.POISONOUS
-}
-
-class Tough : Keyword {
-    override fun resolve(target: Card?, self: Card) {
-        if (self.resistance) {
-            self.resistance = false
-            self.alive = true
-        }
-    }
-
-    override fun getType(): KeywordType = KeywordType.TOUGH
-}
-
-class Sneaky : Keyword {
-    override fun resolve(target: Card?, self: Card) {}
-
-    override fun getType(): KeywordType = KeywordType.SNEAKY
-
 }

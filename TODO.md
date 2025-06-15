@@ -1,4 +1,5 @@
 ### TODO LIST
+- add game end checks on end turn method
 - get all colors in commons 
 - indicative of attacker
 - extra row of cards when arena is too big
@@ -50,3 +51,5 @@
 - added icon pack
 - added first images for cards (deadly hamster and phone stealer otter, thanks Vivi <3)
 - fix defend bug when a non-sneaky card could block sneaky cards
+- implemented frenzy keyword
+- fixed player being able to add cards while defending

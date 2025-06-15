@@ -2,6 +2,7 @@ package entities
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import entities.keywords.KeywordType
 
 class Opponent(
     deck: MutableState<MutableList<Card>>,
@@ -15,7 +16,7 @@ class Opponent(
     arena = arena,
 ) {
 
-    private val _canDefendAgainstPoison: (defender: Card, attacker: Card) -> Boolean =
+    private val canDefendAgainstPoison: (defender: Card, attacker: Card) -> Boolean =
         { defender: Card, attacker: Card ->
             defender.isTough() && defender.strength >= attacker.strength
         }
@@ -52,12 +53,15 @@ class Opponent(
         println(" DEFENDER: ${defender.name}")
         attacker
             .battle(defender)
-            .also { this.attackedBy.value = null }
+            .also {
+                if(!attacker.hasActiveFrenzy())
+                    this.attackedBy.value = null
+            }
 
     }
 
     private fun pickDefender(attacker: Card) = when {
-        attacker.isPoisonous() && this.arena.value.any { _canDefendAgainstPoison(attacker, it) } ->
+        attacker.isPoisonous() && this.arena.value.any { canDefendAgainstPoison(attacker, it) } ->
             arena.value.firstOrNull { it.resistance && it.strength >= attacker.strength }
 
         attacker.resistance && this.arena.value.any { it.strength > attacker.strength } ->
@@ -99,11 +103,11 @@ class Opponent(
                 player = player,
                 canDefend = canDefend
             )
-            return
-        }
-        if (hand.value.size <= 0) {
-            println("PLAYER WON")
-            //TODO: Implement player victory mechanism
+            endTurn(
+                opponent = this,
+                player = player,
+                wasPlayerTurn = false
+            )
             return
         }
 
@@ -133,7 +137,11 @@ class Opponent(
             player.setAttackedBy(attacker = attacker)
             return
         }
+        println("ATTACKER : ${attacker.name} HIT ONCE -1")
         player.takeHit()
+        if(attacker.hasActiveFrenzy())
+            println("ATTACKER : ${attacker.name} HIT TWICE -1")
+            player.takeHit()
     }
 
     private fun selectCardToPlay(player: Player): Card {

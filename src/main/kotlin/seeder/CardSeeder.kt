@@ -3,15 +3,16 @@ package seeder
 import constants.deadlyHamsterRef
 import constants.phoneStealerOtterRef
 import entities.Card
-import entities.Poisonous
-import entities.Sneaky
+import entities.keywords.Frenzy
+import entities.keywords.Poisonous
+import entities.keywords.Sneaky
 
 fun seed(): List<Card> {
 
     return listOf(
-        createRegularAnt(), createPhoneStealerOtter(), createRegularAnt(), createRegularAnt(),
+        createFrenzyCard(), createPhoneStealerOtter(), createFrenzyCard(), createFrenzyCard(),
         createPhoneStealerOtter(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
-        createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createRegularAnt(),
+        createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createFrenzyCard(),
         createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAssassinHedgehog(),
         createAssassinHedgehog(), createDeadlyHamster(),  createPhoneStealerOtter(), createPhoneStealerOtter(),
     ).shuffled()
@@ -43,4 +44,11 @@ private fun createPhoneStealerOtter() : Card = Card(
     flavorText = "Stay alert, check your purses - NOW!",
     keywords = listOf(Sneaky()),
     image = phoneStealerOtterRef
+)
+
+private fun createFrenzyCard() : Card = Card(
+    name = "Frenzy Guinea Pig",
+    strength = 2,
+    flavorText = "Cuy Cuy Cuy!!",
+    keywords = listOf(Frenzy()),
 )

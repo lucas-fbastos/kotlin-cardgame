@@ -16,10 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import constants.CustomIcon
-import entities.Keyword
-import entities.KeywordType
+import entities.keywords.Keyword
+import entities.keywords.KeywordType
 import me.localx.icons.straight.filled.FlaskPoison
 import me.localx.icons.straight.filled.MaskCarnival
+import me.localx.icons.straight.filled.Thunderstorm
 
 @Composable
 fun KeywordBadge(keyword: Keyword) {
@@ -54,5 +55,6 @@ private fun getKeywordIconAndColor(keyword: Keyword): Pair<ImageVector, Color> {
         KeywordType.POISONOUS -> Pair(CustomIcon.FlaskPoison, Color(0xFF10B981))
         KeywordType.TOUGH -> Pair(Icons.Default.FavoriteBorder, Color(0xFF6B7280))
         KeywordType.SNEAKY -> Pair(CustomIcon.MaskCarnival, Color(0xFF8B5CF6))
+        KeywordType.FRENZY -> Pair(CustomIcon.Thunderstorm, Color(0xFF10B981))
     }
 }

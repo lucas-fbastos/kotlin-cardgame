@@ -47,7 +47,7 @@ fun App() {
         .toMutableList()
 
     val turn by BoardHelper.turn.collectAsState()
-    var canPlay: Boolean by rememberSaveable { mutableStateOf(true) }
+    var canPlay: Boolean by BoardHelper.canPlay
     val opponent: Opponent by rememberSaveable {
         mutableStateOf(
             Opponent(

@@ -1,5 +1,7 @@
 package entities
 
+import entities.keywords.Poisonous
+import entities.keywords.Tough
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -17,7 +19,7 @@ class CardTest {
         val card2 = Card(
             name = "Tough Card",
             strength = 5,
-            keywords = listOf(Tough()),
+            keywords = listOf(Poisonous(),),
             resistance = true
         )
 
