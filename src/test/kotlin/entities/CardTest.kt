@@ -19,7 +19,7 @@ class CardTest {
         val card2 = Card(
             name = "Tough Card",
             strength = 5,
-            keywords = listOf(Poisonous(),),
+            keywords = listOf(Tough()),
             resistance = true
         )
 

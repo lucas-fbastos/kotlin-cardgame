@@ -1,5 +1,7 @@
 package entities
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import entities.keywords.Keyword
 import entities.keywords.KeywordType
@@ -15,7 +17,8 @@ data class Card(
     var playerOwned: Boolean = true,
     var resistance: Boolean = false,
     var image : ImageBitmap? = null,
-    val keywords: List<Keyword> = emptyList()
+    val keywords: List<Keyword> = emptyList(),
+    val isAttacking: MutableState<Boolean> = mutableStateOf(false),
 ) {
 
     fun die() {
@@ -67,6 +70,14 @@ data class Card(
         keywords
             .firstOrNull{ it.getType() == KeywordType.FRENZY}
             ?.refresh()
+    }
+
+    fun triggerAttackAnimation() {
+        isAttacking.value = true
+    }
+
+    fun resetAttackAnimation() {
+        isAttacking.value = false
     }
 }
 

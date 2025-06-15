@@ -133,6 +133,9 @@ class Opponent(
         println("ATTACK!!!!")
         val attacker = arena.value.getDeadlyCard() ?: arena.value.getSmallCard()
         println("ATTACKER : ${attacker.name}")
+
+        attacker.triggerAttackAnimation()
+
         if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky())) {
             player.setAttackedBy(attacker = attacker)
             return

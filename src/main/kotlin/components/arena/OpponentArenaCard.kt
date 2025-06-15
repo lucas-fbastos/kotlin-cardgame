@@ -1,5 +1,8 @@
 package components.arena
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -40,7 +45,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
 import constants.CARD_STRENGTH_GRADIENT
+import constants.COLOR_BRIGHT_RED
+import constants.COLOR_CORAL
+import constants.COLOR_CRIMSON
 import constants.COLOR_DARK_ORANGE
+import constants.COLOR_GOLD
+import constants.COLOR_ORANGE
+import constants.COLOR_ORANGE_RED
+import constants.DEFAULT_ANIMATION_DURATION
 import constants.OPPONENT_BACKGROUND_GRADIENT
 import constants.OPPONENT_BORDER_GRADIENT
 import entities.Card
@@ -54,6 +66,35 @@ fun OpponentArenaCard(
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
 
+    val isAttacking by card.isAttacking
+
+    val attackOffset by animateFloatAsState(
+        targetValue = if (isAttacking) 30f else 0f,
+        animationSpec = tween(
+            durationMillis = DEFAULT_ANIMATION_DURATION,
+            easing = FastOutSlowInEasing
+        ),
+        finishedListener = {
+            card.resetAttackAnimation()
+        }
+    )
+
+    val attackScale by animateFloatAsState(
+        targetValue = if (isAttacking) 1.15f else 1f,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = FastOutSlowInEasing
+        )
+    )
+
+    val attackRotation by animateFloatAsState(
+        targetValue = if (isAttacking) -8f else 0f,
+        animationSpec = tween(
+            durationMillis = 200,
+            easing = FastOutSlowInEasing
+        )
+    )
+
     Box(
         modifier = Modifier
             .padding(6.dp)
@@ -61,19 +102,36 @@ fun OpponentArenaCard(
             .offset {
                 IntOffset(
                     x = offset.x.roundToInt(),
-                    y = offset.y.roundToInt()
+                    y = (offset.y + attackOffset).roundToInt()
                 )
             }
+            .scale(attackScale)
+            .rotate(attackRotation)
             .clip(RoundedCornerShape(12.dp))
             .background(
                 brush = Brush.verticalGradient(
-                    colors = OPPONENT_BACKGROUND_GRADIENT
+                    colors = if (isAttacking) {
+                        listOf(
+                            COLOR_ORANGE_RED,
+                            COLOR_BRIGHT_RED,
+                            COLOR_CORAL
+                        )
+                    } else {
+                        OPPONENT_BACKGROUND_GRADIENT
+                    }
                 )
             )
             .border(
-                width = 2.dp,
+                width = if (isAttacking) 4.dp else 2.dp,
                 brush = Brush.linearGradient(
-                    colors = OPPONENT_BORDER_GRADIENT
+                    colors = if (isAttacking) {
+                        listOf(
+                            COLOR_ORANGE_RED,
+                            COLOR_GOLD
+                        )
+                    } else {
+                        OPPONENT_BORDER_GRADIENT
+                    }
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -94,11 +152,18 @@ fun OpponentArenaCard(
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                     .background(
                         brush = Brush.radialGradient(
-                            colors = OPPONENT_BACKGROUND_GRADIENT
+                            colors = if (isAttacking) {
+                                listOf(
+                                    COLOR_BRIGHT_RED,
+                                    COLOR_ORANGE_RED,
+                                    COLOR_CRIMSON
+                                )
+                            } else {
+                                OPPONENT_BACKGROUND_GRADIENT
+                            }
                         )
                     )
             ) {
-                // Header with name and strength
                 // Background card image that fills the entire box
                 card.image?.let {
                     Image(
@@ -119,19 +184,30 @@ fun OpponentArenaCard(
                 ) {
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    // Strength
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(if (isAttacking) 36.dp else 32.dp)
                             .background(
                                 brush = Brush.radialGradient(
-                                    colors = CARD_STRENGTH_GRADIENT
+                                    colors = if (isAttacking) {
+                                        listOf(
+                                            COLOR_GOLD,
+                                            COLOR_ORANGE,
+                                            COLOR_ORANGE_RED
+                                        )
+                                    } else {
+                                        CARD_STRENGTH_GRADIENT
+                                    }
                                 ),
                                 shape = CircleShape
                             )
                             .border(
-                                width = 2.dp,
-                                color = Color.White.copy(alpha = 0.8f),
+                                width = if (isAttacking) 3.dp else 2.dp,
+                                color = if (isAttacking) {
+                                    Color.White
+                                } else {
+                                    Color.White.copy(alpha = 0.8f)
+                                },
                                 shape = CircleShape
                             ),
                         contentAlignment = Alignment.Center
@@ -139,7 +215,7 @@ fun OpponentArenaCard(
                         Text(
                             text = card.strength.toString(),
                             color = Color.White,
-                            fontSize = 14.sp,
+                            fontSize = if (isAttacking) 16.sp else 14.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -163,10 +239,41 @@ fun OpponentArenaCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(75.dp) // 30% of 250dp
-                    .background(COLOR_DARK_ORANGE)
+                    .background(
+                        if (isAttacking) {
+                            COLOR_ORANGE_RED
+                        } else {
+                            COLOR_DARK_ORANGE
+                        }
+                    )
                     .padding(8.dp)
+            ) {
+                if (isAttacking) {
+                    Text(
+                        text = "ATTACKING!",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
+
+        if (isAttacking) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                COLOR_ORANGE_RED.copy(alpha = 0.3f),
+                                Color.Transparent
+                            )
+                        )
+                    )
             )
         }
     }
 }
-
