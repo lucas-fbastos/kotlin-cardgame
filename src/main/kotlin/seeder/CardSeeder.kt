@@ -1,5 +1,6 @@
 package seeder
 
+import constants.alchemistHedgehogRef
 import constants.deadlyHamsterRef
 import constants.phoneStealerOtterRef
 import entities.Card
@@ -11,10 +12,10 @@ fun seed(): List<Card> {
 
     return listOf(
         createFrenzyCard(), createPhoneStealerOtter(), createFrenzyCard(), createFrenzyCard(),
-        createPhoneStealerOtter(), createDeadlyHamster(), createDeadlyHamster(), createAssassinHedgehog(),
-        createAssassinHedgehog(), createRegularAnt(), createRegularAnt(), createFrenzyCard(),
-        createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAssassinHedgehog(),
-        createAssassinHedgehog(), createDeadlyHamster(),  createPhoneStealerOtter(), createPhoneStealerOtter(),
+        createPhoneStealerOtter(), createDeadlyHamster(), createDeadlyHamster(), createAlchemistHedgehog(),
+        createAlchemistHedgehog(), createRegularAnt(), createRegularAnt(), createFrenzyCard(),
+        createRegularAnt(), createRegularAnt(), createDeadlyHamster(), createAlchemistHedgehog(),
+        createAlchemistHedgehog(), createDeadlyHamster(),  createPhoneStealerOtter(), createPhoneStealerOtter(),
     ).shuffled()
 }
 
@@ -31,11 +32,12 @@ private fun createDeadlyHamster() : Card = Card(
     image = deadlyHamsterRef
 )
 
-private fun createAssassinHedgehog() : Card = Card(
-    name = "Assassin Hedgehog",
+private fun createAlchemistHedgehog() : Card = Card(
+    name = "Alchemist Hedgehog",
     strength = 4,
-    flavorText = "never lost a contract...",
-    keywords = listOf(Poisonous(),)
+    flavorText = "He forgot more about magic than you will ever know.",
+    keywords = listOf(Poisonous(),),
+    image = alchemistHedgehogRef,
 )
 
 private fun createPhoneStealerOtter() : Card = Card(

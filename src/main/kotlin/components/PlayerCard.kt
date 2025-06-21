@@ -158,7 +158,7 @@ fun PlayerCard(
             ) {
 
                 Text(
-                    text = card.name + canPlay.toString(),
+                    text = card.name,
                     modifier = Modifier.weight(1f),
                     color = Color.White,
                     fontSize = 14.sp,

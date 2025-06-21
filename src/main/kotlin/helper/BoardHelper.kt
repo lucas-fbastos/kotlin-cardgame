@@ -12,11 +12,18 @@ class BoardHelper{
 
     companion object{
 
-
         private val _turn = MutableStateFlow(1)
+
         val turn: StateFlow<Int> = _turn.asStateFlow()
+
         @JvmStatic
-         var canPlay : MutableState<Boolean> = mutableStateOf(value = true)
+        var canPlay : MutableState<Boolean> = mutableStateOf(value = true)
+
+        @JvmStatic
+        var gameFinished: MutableState<Boolean> = mutableStateOf(value = false)
+
+        @JvmStatic
+        var playerWon: MutableState<Boolean> = mutableStateOf(value = false)
 
         fun getTurn() : Int = _turn.value
 
@@ -28,6 +35,18 @@ class BoardHelper{
         fun blockPlayer() {  canPlay.value = false }
 
         fun releasePlayer() { canPlay.value = true }
+
+        fun finishGame(playerWon: Boolean){
+            gameFinished.value = true
+            this.playerWon.value = playerWon
+        }
+
+        fun restartGame(){
+            _turn.value = 0
+            playerWon.value = false
+            gameFinished.value = false
+            releasePlayer()
+        }
 
         fun removeCardsFromBoard(
             opponent: Opponent,

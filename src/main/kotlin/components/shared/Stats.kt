@@ -19,7 +19,6 @@ import constants.COLOR_TEXT_PRIMARY
 import constants.COLOR_TEXT_SECONDARY
 import constants.CustomIcon
 import entities.Player
-import helper.BoardHelper
 import me.localx.icons.straight.filled.Heart
 import me.localx.icons.straight.filled.Tombstone
 
@@ -52,11 +51,6 @@ internal fun Stats(player: Player) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            StatItem(
-                label = "CAN PLAY",
-                value = BoardHelper.canPlay.toString(),
-                color = COLOR_PRIMARY,
-            )
             StatItem(
                 label = "Mind Bugs",
                 value = player.amountOfMindBugs.toString(),
