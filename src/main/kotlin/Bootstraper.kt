@@ -33,7 +33,6 @@ import components.hand.PlayerHand
 import components.shared.StatItem
 import constants.COLOR_BACKGROUND
 import constants.COLOR_PRIMARY
-import entities.Card
 import entities.Opponent
 import entities.Player
 import helper.BoardHelper
@@ -44,29 +43,36 @@ import seeder.seed
 fun App() {
     val (playerCards, opponentCards, playerHand, opponentHand) = seed()
         .chunked(size = 5)
-        .toMutableList()
+        .map { it.toMutableList() }
 
     val turn by BoardHelper.turn.collectAsState()
     var canPlay: Boolean by BoardHelper.canPlay
+    val gameFinished: Boolean by BoardHelper.gameFinished
+    val playerWon: Boolean by BoardHelper.playerWon
+
     val opponent: Opponent by rememberSaveable {
-        mutableStateOf(
-            Opponent(
-                deck = mutableStateOf(opponentCards.toOpponentCard()),
-                hand = mutableStateOf(opponentHand.toOpponentCard()),
-            )
-        )
+        mutableStateOf(Opponent())
     }
 
     val player: Player by rememberSaveable {
-        mutableStateOf(
-            Player(
-                hand = mutableStateOf(playerHand.toMutableList()),
-                deck = mutableStateOf(playerCards.toMutableList())
-            )
-        )
+        mutableStateOf(Player())
     }
 
-    if (player.lifePoints.value == 0) endGame(playerWon = false).also { canPlay = false }
+    player.setCards(
+        hand = playerHand,
+        deck = playerCards,
+    )
+
+    opponent.setCards(
+        hand = opponentHand,
+        deck = opponentCards,
+    )
+
+    if (gameFinished) endGame(
+        playerWon = playerWon,
+        player = player,
+        opponent = opponent
+    ).also { canPlay = false }
 
     MaterialTheme {
         Box(
@@ -109,9 +115,34 @@ fun App() {
 }
 
 @Composable
-fun endGame(playerWon: Boolean) {
+fun endGame(
+    player: Player,
+    opponent: Opponent,
+    playerWon: Boolean,
+    ) {
     Window(
-        onCloseRequest = { },
+        onCloseRequest = {
+            BoardHelper.restartGame()
+            player.reset()
+            opponent.reset()
+
+            val (playerCards, opponentCards, playerHand, opponentHand) = seed()
+                .chunked(size = 5)
+                .map {
+                    it.toMutableList()
+                }
+
+            player.setCards(
+                hand = playerHand,
+                deck = playerCards,
+            )
+
+            opponent.setCards(
+                hand = opponentHand,
+                deck = opponentCards,
+            )
+
+        },
         resizable = false,
         title = "Game Ended",
         state = WindowState(width = 200.dp, height = 200.dp)
@@ -134,7 +165,3 @@ fun main() = application {
     }
 }
 
-private fun List<Card>.toOpponentCard() =
-    this.map {
-        it.copy(playerOwned = false)
-    }.toMutableList()

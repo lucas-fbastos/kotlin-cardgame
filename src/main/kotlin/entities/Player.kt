@@ -16,6 +16,26 @@ open class Player(
     val attackedBy: MutableState<Card?> = mutableStateOf(value = null)
 ) {
 
+    internal fun isDefeated() : Boolean = lifePoints.value <= 0 || ( hand.value.size == 0 && arena.value.size == 0 )
+
+    internal open fun setCards(
+        hand: MutableList<Card>,
+        deck: MutableList<Card>,
+    ){
+        this.deck.value = deck
+        this.hand.value = hand
+    }
+
+    internal fun reset(){
+        lifePoints.value = TOTAL_HP
+        hand.value = mutableListOf()
+        discardPile.value = mutableListOf()
+        discardPile.value = mutableListOf()
+        arena.value = mutableListOf()
+        attackedBy.value = null
+        amountOfMindBugs = 2
+    }
+
     internal fun buyCard() {
         hand.value.add(deck.value.first())
         deck.value.removeFirst()
@@ -111,6 +131,16 @@ open class Player(
         wasPlayerTurn: Boolean,
     ) {
 
+        if(opponent.isDefeated()){
+            BoardHelper.finishGame(playerWon = true)
+            return
+        }
+
+        if (player.isDefeated()){
+            BoardHelper.finishGame(playerWon = false)
+            return
+        }
+
         player.refreshCards()
         opponent.refreshCards()
 
@@ -132,7 +162,7 @@ open class Player(
             ?.isActive(self = this)
             ?: false
 
-    internal fun Card.consumeFrenzy() =
+    private fun Card.consumeFrenzy() =
         this.keywords
             .firstOrNull{ it.getType() == KeywordType.FRENZY }
             ?.resolve(self = this)

@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import entities.keywords.KeywordType
 
 class Opponent(
-    deck: MutableState<MutableList<Card>>,
-    hand: MutableState<MutableList<Card>>,
+    deck: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
+    hand: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
     discardPile: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
     arena: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
 ) : Player(
@@ -15,6 +15,19 @@ class Opponent(
     discardPile = discardPile,
     arena = arena,
 ) {
+
+    override fun setCards(
+        hand: MutableList<Card>,
+        deck: MutableList<Card>,
+    ){
+        val opponentHand = hand.toOpponentCard()
+        val opponentDeck = deck.toOpponentCard()
+
+        super.setCards(
+            hand = opponentHand,
+            deck = opponentDeck,
+        )
+    }
 
     private val canDefendAgainstPoison: (defender: Card, attacker: Card) -> Boolean =
         { defender: Card, attacker: Card ->
@@ -80,29 +93,8 @@ class Opponent(
 
 
     fun act(player: Player) {
-        println("ACT!!!!")
-        if (arena.value.size > 0) {
-            val canDefend =  canPlayerDefend(player)
-            val defenderWillSurvive = canDefend && playerDefenseWillSurvive(player)
-            if (defenderWillSurvive && hand.value.size > 0) {
-                println(" PLAY CARD!!!!")
 
-                val cardToPlay = selectCardToPlay(player = player)
-
-                println(" PLAY THIS CARD: ${cardToPlay.name}")
-                playCard(card = cardToPlay)
-
-                endTurn(
-                    opponent = this,
-                    player = player,
-                    wasPlayerTurn = false
-                )
-                return
-            }
-            attack(
-                player = player,
-                canDefend = canDefend
-            )
+        if(isDefeated()){
             endTurn(
                 opponent = this,
                 player = player,
@@ -111,18 +103,36 @@ class Opponent(
             return
         }
 
-        println(" PLAY CARD!!!!")
-        val cardToPlay = selectCardToPlay(player = player)
+        println("ACT!!!!")
 
-        println(" PLAY THIS CARD: ${cardToPlay.name}")
-        playCard(card = cardToPlay)
+        val canDefend =  canPlayerDefend(player)
+        val defenderWillSurvive = canDefend && playerDefenseWillSurvive(player)
+        if (defenderWillSurvive && hand.value.size > 0) {
+            println(" PLAY CARD!!!!")
+
+            val cardToPlay = selectCardToPlay(player = player)
+
+            println(" PLAY THIS CARD: ${cardToPlay.name}")
+            playCard(card = cardToPlay)
+
+            endTurn(
+                opponent = this,
+                player = player,
+                wasPlayerTurn = false
+            )
+            return
+        }
+
+        attack(
+            player = player,
+            canDefend = canDefend
+        )
 
         endTurn(
             opponent = this,
             player = player,
             wasPlayerTurn = false
         )
-
     }
 
 
@@ -191,3 +201,8 @@ internal fun Player.getStrongestSneaky() = this.arena
             .any { it.getType() == KeywordType.SNEAKY }
     }
     .maxBy { it.strength }
+
+private fun List<Card>.toOpponentCard() =
+    this.map {
+        it.copy(playerOwned = false)
+    }.toMutableList()
