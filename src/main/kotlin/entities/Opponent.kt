@@ -3,6 +3,7 @@ package entities
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import entities.keywords.KeywordType
+import helper.BoardHelper
 
 class Opponent(
     deck: MutableState<MutableList<Card>> = mutableStateOf(mutableListOf()),
@@ -107,7 +108,7 @@ class Opponent(
 
         val canDefend =  canPlayerDefend(player)
         val defenderWillSurvive = canDefend && playerDefenseWillSurvive(player)
-        if (defenderWillSurvive && hand.value.size > 0) {
+        if (arena.value.isEmpty() || (defenderWillSurvive && hand.value.size > 0)) {
             println(" PLAY CARD!!!!")
 
             val cardToPlay = selectCardToPlay(player = player)
@@ -128,11 +129,7 @@ class Opponent(
             canDefend = canDefend
         )
 
-        endTurn(
-            opponent = this,
-            player = player,
-            wasPlayerTurn = false
-        )
+        BoardHelper.blockPlayer()
     }
 
 
@@ -152,9 +149,11 @@ class Opponent(
         }
         println("ATTACKER : ${attacker.name} HIT ONCE -1")
         player.takeHit()
-        if(attacker.hasActiveFrenzy())
+        if(attacker.hasActiveFrenzy()){
             println("ATTACKER : ${attacker.name} HIT TWICE -1")
             player.takeHit()
+        }
+
     }
 
     private fun selectCardToPlay(player: Player): Card {

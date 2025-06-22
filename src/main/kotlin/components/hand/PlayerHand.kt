@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -87,55 +89,68 @@ private fun CardHandArea(
     canPlay: Boolean,
     onPositionChanged: (Offset, Offset) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(
-                color = COLOR_SURFACE,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = COLOR_BORDER,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .onGloballyPositioned { layoutCoordinates ->
-                val position = layoutCoordinates.positionInRoot()
-                val size = Offset(
-                    x = layoutCoordinates.size.width.toFloat(),
-                    y = layoutCoordinates.size.height.toFloat()
-                )
-                onPositionChanged(position, size)
-            }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        if(player.hand.value.isNotEmpty()){
-            player.hand.value.forEach { card ->
-                key(card.id) {
-                    PlayerCard(
-                        canPlay = canPlay,
-                        handPosition = Offset.Zero,
-                        card = card,
-                        player = player,
-                        opponent = opponent,
+
+        val screenWidth = maxWidth * 0.7f
+        val cardWidth = (screenWidth * 0.12f)
+        val cardHeight = (cardWidth * 1.66f)
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(cardHeight + 16.dp)
+                .background(
+                    color = COLOR_SURFACE,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = COLOR_BORDER,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .onGloballyPositioned { layoutCoordinates ->
+                    val position = layoutCoordinates.positionInRoot()
+                    val size = Offset(
+                        x = layoutCoordinates.size.width.toFloat(),
+                        y = layoutCoordinates.size.height.toFloat()
+                    )
+                    onPositionChanged(position, size)
+                }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            if(player.hand.value.isNotEmpty()){
+                player.hand.value.forEach { card ->
+                    key(card.id) {
+                        PlayerCard(
+                            canPlay = canPlay,
+                            handPosition = Offset.Zero,
+                            card = card,
+                            player = player,
+                            opponent = opponent,
+                            modifier = Modifier
+                                .width(cardWidth)
+                                .height(cardHeight)
+                        )
+                    }
+                }
+            }else{
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No cards in hand",
+                        color = COLOR_TEXT_SECONDARY,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
-        }else{
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No cards in hand",
-                    color = COLOR_TEXT_SECONDARY,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
         }
     }
+
 }

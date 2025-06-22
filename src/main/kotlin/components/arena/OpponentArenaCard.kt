@@ -40,6 +40,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +61,9 @@ import kotlin.math.roundToInt
 
 @Composable
 fun OpponentArenaCard(
-    card: Card
+    card: Card,
+    cardWidth: Dp,
+    cardHeight: Dp,
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -98,7 +101,7 @@ fun OpponentArenaCard(
     Box(
         modifier = Modifier
             .padding(6.dp)
-            .size(width = 150.dp, height = 250.dp)
+            .size(width = cardWidth, height = cardHeight)
             .offset {
                 IntOffset(
                     x = offset.x.roundToInt(),
@@ -143,12 +146,15 @@ fun OpponentArenaCard(
                 )
             }
     ) {
+
+        val imageHeight = cardHeight * 0.7f
+        val actionHeight = cardHeight * 0.3f
+
         Column {
-            // Image section (70% of card height)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(175.dp) // 70% of 250dp
+                    .height(imageHeight)
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                     .background(
                         brush = Brush.radialGradient(
@@ -164,14 +170,12 @@ fun OpponentArenaCard(
                         )
                     )
             ) {
-                // Background card image that fills the entire box
                 card.image?.let {
                     Image(
                         bitmap = it,
                         contentDescription = "Card Artwork Background",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
 
@@ -234,11 +238,10 @@ fun OpponentArenaCard(
                 }
             }
 
-            // Action section (30% of card height)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(75.dp) // 30% of 250dp
+                    .height(actionHeight) // 30% of 250dp
                     .background(
                         if (isAttacking) {
                             COLOR_ORANGE_RED

@@ -3,11 +3,11 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -41,6 +41,7 @@ import seeder.seed
 @Composable
 @Preview
 fun App() {
+
     val (playerCards, opponentCards, playerHand, opponentHand) = seed()
         .chunked(size = 5)
         .map { it.toMutableList() }
@@ -75,18 +76,22 @@ fun App() {
     ).also { canPlay = false }
 
     MaterialTheme {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .background(COLOR_BACKGROUND)
         ) {
+
+            val screenWidth = maxWidth * 0.7f
+            val cardWidth = (screenWidth * 0.12f)
+            val cardHeight = (cardWidth * 1.66f)
+
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
-                    .width(width = 1200.dp)
+                    .fillMaxWidth()
                     .zIndex(1f),
-
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
@@ -102,6 +107,8 @@ fun App() {
                 Battlefield(
                     player = player,
                     opponent = opponent,
+                    cardHeight = cardHeight,
+                    cardWidth = cardWidth,
                 )
 
                 PlayerHand(

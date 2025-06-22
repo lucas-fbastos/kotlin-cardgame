@@ -131,6 +131,9 @@ open class Player(
         wasPlayerTurn: Boolean,
     ) {
 
+        println("---------")
+        println("TURN ended - was player turn? $wasPlayerTurn")
+
         if(opponent.isDefeated()){
             BoardHelper.finishGame(playerWon = true)
             return

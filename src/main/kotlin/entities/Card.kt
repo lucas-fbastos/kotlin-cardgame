@@ -57,6 +57,10 @@ data class Card(
         } else if (opponent.strength < this.strength && !hit) {
             opponent.die()
         }
+        println("-----------------")
+        println("BATTLE RESULT:")
+        println(" ATTACKER: ${this.name} - ${if(this.alive) "ALIVE" else "DEAD" }")
+        println(" DEFENDER: ${opponent.name} - ${if(opponent.alive) "ALIVE" else "DEAD" }")
     }
 
     fun canDefend(attacker: Card): Boolean = attacker.keywords

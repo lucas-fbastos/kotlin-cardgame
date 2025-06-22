@@ -63,6 +63,7 @@ fun PlayerCard(
     handPosition: Offset,
     player: Player,
     opponent: Opponent,
+    modifier: Modifier = Modifier,
 ) {
     var offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -70,9 +71,8 @@ fun PlayerCard(
     var isPlayed by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(5.dp)
-            .size(width = 181.dp, height = 281.dp)
             .offset {
                 IntOffset(
                     x = offset.x.roundToInt(),
@@ -146,10 +146,20 @@ fun PlayerCard(
                 }
             }
     ) {
+
+        // Responsive scaling factor
+        val scale = (cardSize.x / 160f).coerceIn(0.75f, 1.25f)
+        val fontSize = (14 * scale).sp
+        val smallFontSize = (11 * scale).sp
+        val iconSize = (32 * scale).dp
+        val padding = (12 * scale).dp
+        val imageHeight = (cardSize.x * 0.85f).dp
+        val keywordPadding = (8 * scale).dp
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(padding)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -158,10 +168,10 @@ fun PlayerCard(
             ) {
 
                 Text(
-                    text = card.name,
+                    text = card.name + canPlay,
                     modifier = Modifier.weight(1f),
                     color = Color.White,
-                    fontSize = 14.sp,
+                    fontSize = fontSize,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -169,7 +179,7 @@ fun PlayerCard(
 
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(iconSize)
                         .background(
                             brush = Brush.radialGradient(
                                 colors = listOf(
@@ -189,19 +199,19 @@ fun PlayerCard(
                     Text(
                         text = card.strength.toString(),
                         color = Color.White,
-                        fontSize = 14.sp,
+                        fontSize = fontSize,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height((8 * scale).dp))
 
             // Main card image area
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp)
+                    .height(imageHeight)
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         brush = Brush.radialGradient(
@@ -224,14 +234,13 @@ fun PlayerCard(
                         bitmap = it,
                         contentDescription = "Card Artwork",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     )
                 } ?: Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = "Card Artwork",
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(60.dp * scale)
                         .align(Alignment.Center),
                     tint = Color(0xFF8B5CF6).copy(alpha = 0.5f)
                 )
@@ -241,17 +250,20 @@ fun PlayerCard(
                     LazyRow(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            .padding(keywordPadding),
+                        horizontalArrangement = Arrangement.spacedBy((4 * scale).dp)
                     ) {
                         items(card.keywords) { keyword ->
-                            KeywordBadge(keyword = keyword)
+                            KeywordBadge(
+                                keyword = keyword,
+                                scale = scale,
+                            )
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height((8 * scale).dp))
 
             card.flavorText?.let { flavorText ->
                 Box(
@@ -261,14 +273,14 @@ fun PlayerCard(
                             color = Color(0xFF1F1F35),
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .padding(8.dp)
+                        .padding((8 * scale).dp)
                 ) {
                     Text(
                         text = flavorText,
                         color = Color(0xFFD1D5DB),
-                        fontSize = 11.sp,
+                        fontSize = smallFontSize,
                         fontStyle = FontStyle.Italic,
-                        lineHeight = 14.sp,
+                        lineHeight = (14 * scale).sp,
                         textAlign = TextAlign.Center,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis

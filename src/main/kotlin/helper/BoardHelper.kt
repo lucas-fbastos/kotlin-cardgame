@@ -32,9 +32,17 @@ class BoardHelper{
             return _turn.value
         }
 
-        fun blockPlayer() {  canPlay.value = false }
+        fun blockPlayer() {
+            canPlay.value = false
+            println("--------------------------")
+            println(" BLOCKED ")
+        }
 
-        fun releasePlayer() { canPlay.value = true }
+        fun releasePlayer() {
+            canPlay.value = true
+            println("--------------------------")
+            println(" RELEASED ")
+        }
 
         fun finishGame(playerWon: Boolean){
             gameFinished.value = true

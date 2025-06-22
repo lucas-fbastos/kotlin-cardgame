@@ -23,7 +23,10 @@ import me.localx.icons.straight.filled.MaskCarnival
 import me.localx.icons.straight.filled.Thunderstorm
 
 @Composable
-fun KeywordBadge(keyword: Keyword) {
+fun KeywordBadge(
+    keyword: Keyword,
+    scale: Float = 1f,
+) {
     val (icon, color) = getKeywordIconAndColor(keyword)
 
     Box(
@@ -37,13 +40,13 @@ fun KeywordBadge(keyword: Keyword) {
                 color = Color.White.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(12.dp)
             )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = (6 * scale).dp, vertical = (2 * scale).dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = icon,
             contentDescription = keyword.getType().name,
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier.size((16 * scale).dp),
             tint = Color.White
         )
     }

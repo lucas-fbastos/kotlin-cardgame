@@ -1,14 +1,13 @@
+
 ### TODO LIST
+- implement mindbugs
+- implement Abilities
 - get all colors in commons 
 - indicative of attacker
-- extra row of cards when arena is too big
-- see bug last card become unplayable
-- improve logging when cards battle
-- finish opponent play mechanic (check if keyword *PLAY* triggers) this only can be done on the board level since the mindbug needs to resolve before
-- initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
 - create refined strategy for opponent to check cards before selecting the attacker 
 - add animations to play card and attack card (opponent and player) play card animation can control the delay of the opponent action
 - add start menu
+- extra row of cards when arena is too big
 
 ###  DONE
 - player basics
@@ -55,3 +54,9 @@
 - added game restart option
 - added image for alchemist hedgehog
 - simplified act method on opponent 
+- added more logs
+- fixed non frenzy cards hitting twice
+- resizeable cards depending on screen size
+
+## LINKS 
+- initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
