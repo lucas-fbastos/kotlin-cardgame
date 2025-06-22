@@ -35,28 +35,37 @@ data class Card(
         println(" ATTACKER: ${this.name}")
         println(" DEFENDER: ${opponent.name}")
 
-        val hit = this.keywords
-            .firstOrNull { it.getType() == KeywordType.POISONOUS }
-            ?.resolve(target = opponent, self = this)
-            ?.let { true }
-            ?: false
+        val hasPoison = keywords
+            .any{ it.getType() == KeywordType.POISONOUS }
 
-        val opponentHit = opponent.keywords
-            .firstOrNull { it.getType() == KeywordType.POISONOUS }
-            ?.resolve(target = this, self = opponent)
-            ?.let { true }
-            ?: false
+        val opponentHasPoison = opponent.keywords
+            .any{ it.getType() == KeywordType.POISONOUS }
 
-        if (opponent.strength > this.strength && !opponentHit) {
-            this.die()
-        } else if (opponent.strength == this.strength) {
-            if (!opponentHit)
-                this.die()
-            if (!hit)
-                opponent.die()
-        } else if (opponent.strength < this.strength && !hit) {
-            opponent.die()
+        if(hasPoison){
+            keywords
+                .firstOrNull{ it.getType() == KeywordType.POISONOUS }
+                ?.resolve(
+                    target = opponent,
+                    self = this
+                )
         }
+
+        if(opponentHasPoison)
+            opponent.keywords
+                .firstOrNull{ it.getType() == KeywordType.POISONOUS }
+                ?.resolve(
+                    target = opponent,
+                    self = this
+                )
+        when {
+            strength > opponent.strength -> opponent.die()
+            strength < opponent.strength -> die()
+           else -> {
+                opponent.die()
+                die()
+            }
+        }
+
         println("-----------------")
         println("BATTLE RESULT:")
         println(" ATTACKER: ${this.name} - ${if(this.alive) "ALIVE" else "DEAD" }")

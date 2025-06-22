@@ -128,8 +128,6 @@ class Opponent(
             player = player,
             canDefend = canDefend
         )
-
-        BoardHelper.blockPlayer()
     }
 
 
@@ -145,6 +143,7 @@ class Opponent(
 
         if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky())) {
             player.setAttackedBy(attacker = attacker)
+            BoardHelper.blockPlayer()
             return
         }
         println("ATTACKER : ${attacker.name} HIT ONCE -1")
