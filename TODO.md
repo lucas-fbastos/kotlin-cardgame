@@ -1,13 +1,14 @@
 
 ### TODO LIST
 - implement mindbugs
-- implement Abilities
+- select target card for abilities
 - get all colors in commons 
 - indicative of attacker
 - create refined strategy for opponent to check cards before selecting the attacker 
 - add animations to play card and attack card (opponent and player) play card animation can control the delay of the opponent action
 - add start menu
 - extra row of cards when arena is too big
+- rework ui
 
 ###  DONE
 - player basics
@@ -46,7 +47,7 @@
 - implement a way of setting the defender, even when there is no card available to defend.
 - UI redone
 - added icon pack
-- added first images for cards (deadly hamster and phone stealer otter, thanks Vivi <3)
+- added first images for cards (deadly hamster and phone stealer otter, thanks wife <3)
 - fix defend bug when a non-sneaky card could block sneaky cards
 - implemented frenzy keyword
 - fixed player being able to add cards while defending
@@ -57,6 +58,8 @@
 - added more logs
 - fixed non frenzy cards hitting twice
 - resizeable cards depending on screen size
+- implemented Abilities
+- frenzy cards didn't release player
 
 ## LINKS 
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0

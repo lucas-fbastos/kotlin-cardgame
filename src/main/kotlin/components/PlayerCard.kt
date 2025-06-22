@@ -124,7 +124,9 @@ fun PlayerCard(
 
                             if (isOutsideParent) {
                                 BoardHelper.blockPlayer()
-                                player.playCard(card = card)
+                                player.playCard(
+                                    card = card,
+                                    opponent = opponent)
                                 isPlayed = true
                                 player.endTurn(
                                     player = player,

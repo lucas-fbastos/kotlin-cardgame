@@ -114,7 +114,7 @@ class Opponent(
             val cardToPlay = selectCardToPlay(player = player)
 
             println(" PLAY THIS CARD: ${cardToPlay.name}")
-            playCard(card = cardToPlay)
+            playCard(card = cardToPlay, opponent = player)
 
             endTurn(
                 opponent = this,
@@ -141,6 +141,12 @@ class Opponent(
 
         attacker.triggerAttackAnimation()
 
+        handleAttackTrigger(
+            card = attacker,
+            opponent = player,
+            target = null // create mechanism to select the target something like the pick card to attack
+        )
+
         if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky())) {
             player.setAttackedBy(attacker = attacker)
             BoardHelper.blockPlayer()
@@ -148,10 +154,18 @@ class Opponent(
         }
         println("ATTACKER : ${attacker.name} HIT ONCE -1")
         player.takeHit()
+
         if(attacker.hasActiveFrenzy()){
             println("ATTACKER : ${attacker.name} HIT TWICE -1")
             player.takeHit()
         }
+
+        endTurn(
+            opponent = this,
+            player = player,
+            wasPlayerTurn = false
+        )
+
 
     }
 

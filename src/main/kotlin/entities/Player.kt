@@ -3,6 +3,8 @@ package entities
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import constants.TOTAL_HP
+import entities.abilities.AbilityTrigger
+import entities.abilities.GameContext
 import entities.keywords.KeywordType
 import helper.BoardHelper
 
@@ -41,13 +43,69 @@ open class Player(
         deck.value.removeFirst()
     }
 
-    fun playCard(card: Card) {
+    fun playCard(
+        card: Card,
+        opponent: Player,
+        target: Card? = null
+    ) {
         hand.value = hand.value.toMutableList().apply { remove(card) }
         arena.value = arena.value.toMutableList().apply { add(card) }
+
+        handleTrigger(
+            trigger = AbilityTrigger.ON_PLAY,
+            card = card,
+            opponent = opponent,
+            target = target
+        )
+
+    }
+
+    protected fun handleAttackTrigger(
+        card: Card,
+        opponent: Player,
+        target: Card? = null,
+    ){
+        handleTrigger(
+            trigger = AbilityTrigger.ON_ATTACK,
+            card = card,
+            opponent = opponent,
+            target = target
+        )
+    }
+
+    private fun handleTrigger(
+        card: Card,
+        opponent: Player,
+        target: Card? = null,
+        trigger: AbilityTrigger,){
+
+        val gameContext = GameContext(
+            card = card,
+            caster = this,
+            opponent = opponent,
+            targetCard = target
+        )
+
+        card
+            .abilities
+            .filter { it.trigger == trigger}
+            .map {
+                it.resolve(
+                    gameContext
+                )
+            }
     }
 
     fun attack(opponent: Opponent, attacker: Card) {
+
+        handleAttackTrigger(
+            card = attacker,
+            opponent = opponent,
+            target = null // CREATE A MECHANISM TO PICK THE TARGET IF APPLICABLE JUST LIKE THE PICK DEFENDER
+        )
+
         opponent.setAttackedBy(attacker)
+
         opponent.defend().also {
             BoardHelper.removeCardsFromBoard(
                 opponent = opponent, player = this

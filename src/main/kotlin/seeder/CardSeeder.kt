@@ -4,6 +4,8 @@ import constants.alchemistHedgehogRef
 import constants.deadlyHamsterRef
 import constants.phoneStealerOtterRef
 import entities.Card
+import entities.abilities.HealOnPlay
+import entities.abilities.HitDirectlyOnAttack
 import entities.keywords.Frenzy
 import entities.keywords.Poisonous
 import entities.keywords.Sneaky
@@ -23,6 +25,10 @@ private fun createRegularAnt(): Card = Card(
     name = "Regular Ant",
     strength = 1,
     flavorText = "just an Ant",
+    abilities = mutableListOf(
+        HealOnPlay(amountToHeal = 1),
+        HitDirectlyOnAttack(amountToHit = 1)
+    )
 )
 
 private fun createDeadlyHamster() : Card = Card(

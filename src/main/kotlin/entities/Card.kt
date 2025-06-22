@@ -3,6 +3,7 @@ package entities
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
+import entities.abilities.AbilityCommand
 import entities.keywords.Keyword
 import entities.keywords.KeywordType
 import java.util.UUID
@@ -12,7 +13,7 @@ data class Card(
     val name: String,
     val strength: Int,
     val flavorText: String? = null,
-    val ability: Ability? = null,
+    val abilities: MutableList<AbilityCommand> = mutableListOf(),
     var alive: Boolean = true,
     var playerOwned: Boolean = true,
     var resistance: Boolean = false,
@@ -54,8 +55,8 @@ data class Card(
             opponent.keywords
                 .firstOrNull{ it.getType() == KeywordType.POISONOUS }
                 ?.resolve(
-                    target = opponent,
-                    self = this
+                    target = this,
+                    self = opponent
                 )
         when {
             strength > opponent.strength -> opponent.die()
@@ -92,9 +93,4 @@ data class Card(
     fun resetAttackAnimation() {
         isAttacking.value = false
     }
-}
-
-
-interface Ability {
-    fun resolve(target: Card?)
 }
