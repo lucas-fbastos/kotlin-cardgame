@@ -4,8 +4,9 @@ import entities.Player
 
 class HitDirectlyOnAttack(
     val amountToHit: Int,
-    override val trigger: AbilityTrigger = AbilityTrigger.ON_ATTACK
-) : AbilityCommand {
+    override val trigger: AbilityTrigger = AbilityTrigger.ON_ATTACK,
+    override val targetable: Boolean = false,
+    ) : AbilityCommand {
 
     private fun effect(target: Player){
         target.lifePoints.value -= amountToHit

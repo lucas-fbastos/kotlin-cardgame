@@ -40,6 +40,8 @@ fun Battlefield(
                         card = card,
                         cardWidth = cardWidth,
                         cardHeight = cardHeight,
+                        player = player,
+                        opponent = opponent,
                     )
                 }
             }

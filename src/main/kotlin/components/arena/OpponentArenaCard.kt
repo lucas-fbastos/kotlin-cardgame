@@ -53,10 +53,14 @@ import constants.COLOR_DARK_ORANGE
 import constants.COLOR_GOLD
 import constants.COLOR_ORANGE
 import constants.COLOR_ORANGE_RED
+import constants.COLOR_RED
 import constants.DEFAULT_ANIMATION_DURATION
 import constants.OPPONENT_BACKGROUND_GRADIENT
 import constants.OPPONENT_BORDER_GRADIENT
 import entities.Card
+import entities.Opponent
+import entities.Player
+import entities.turn.StageType
 import kotlin.math.roundToInt
 
 @Composable
@@ -64,6 +68,8 @@ fun OpponentArenaCard(
     card: Card,
     cardWidth: Dp,
     cardHeight: Dp,
+    player: Player,
+    opponent: Opponent,
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -259,6 +265,20 @@ fun OpponentArenaCard(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.Center)
                     )
+                }
+                player.turnStage.value?.let { stage ->
+                    if (stage.getType() == StageType.TARGET) {
+                        ActionButton(
+                            text = "Target",
+                            onClick = {
+                                player.setTarget(
+                                    target = card,
+                                    opponent = opponent
+                                )
+                            },
+                            backgroundColor = COLOR_RED,
+                        )
+                    }
                 }
             }
         }
