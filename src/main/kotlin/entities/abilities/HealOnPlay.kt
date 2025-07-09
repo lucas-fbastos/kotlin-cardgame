@@ -5,7 +5,8 @@ import entities.Player
 class HealOnPlay(
     val amountToHeal: Int,
     override val trigger: AbilityTrigger = AbilityTrigger.ON_PLAY,
-) : AbilityCommand {
+    override val targetable: Boolean = false,
+    ) : AbilityCommand {
 
     private fun effect(
         caster: Player,

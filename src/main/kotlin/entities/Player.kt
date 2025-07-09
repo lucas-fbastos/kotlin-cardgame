@@ -5,8 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import constants.TOTAL_HP
 import entities.abilities.AbilityTrigger
 import entities.abilities.GameContext
+import entities.abilities.StackAbility
 import entities.keywords.KeywordType
+import entities.turn.PlayStage
+import entities.turn.StageContext
+import entities.turn.TurnStage
 import helper.BoardHelper
+import java.util.Stack
 
 open class Player(
     var amountOfMindBugs: Int = 2,
@@ -15,8 +20,26 @@ open class Player(
     val discardPile: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
     val deck: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
     val arena: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
-    val attackedBy: MutableState<Card?> = mutableStateOf(value = null)
+    val attackedBy: MutableState<Card?> = mutableStateOf(value = null),
+    val turnStage : MutableState<TurnStage?> = mutableStateOf(null),
+    val abilitiesToResolve: MutableState<Stack<StackAbility>?> = mutableStateOf(value = Stack()),
+    val selectedAbility: MutableState<StackAbility?> = mutableStateOf(value = null),
+    val selectedCard: MutableState<Card?> = mutableStateOf(value = null ),
 ) {
+
+    internal fun setTarget(
+        target: Card,
+        opponent: Opponent
+    ){
+        selectedAbility.value?.target?.copy(cardTarget = target)
+        turnStage.value?.moveStage(
+            stageContext = StageContext(
+                caster = this,
+                opponent = opponent,
+                selectedCard = selectedCard.value!!
+            )
+        )
+    }
 
     internal fun isDefeated() : Boolean = lifePoints.value <= 0 || ( hand.value.size == 0 && arena.value.size == 0 )
 
@@ -50,14 +73,16 @@ open class Player(
     ) {
         hand.value = hand.value.toMutableList().apply { remove(card) }
         arena.value = arena.value.toMutableList().apply { add(card) }
+        selectedCard.value = card
 
-        handleTrigger(
-            trigger = AbilityTrigger.ON_PLAY,
-            card = card,
-            opponent = opponent,
-            target = target
-        )
-
+        PlayStage()
+            .moveStage(
+                stageContext = StageContext(
+                    caster = this,
+                    opponent = opponent,
+                    selectedCard = card
+                )
+            )
     }
 
     protected fun handleAttackTrigger(
