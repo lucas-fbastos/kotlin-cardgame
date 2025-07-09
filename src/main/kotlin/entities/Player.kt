@@ -75,7 +75,7 @@ open class Player(
         arena.value = arena.value.toMutableList().apply { add(card) }
         selectedCard.value = card
 
-        PlayStage()
+        PlayStage(trigger = AbilityTrigger.ON_PLAY)
             .moveStage(
                 stageContext = StageContext(
                     caster = this,
