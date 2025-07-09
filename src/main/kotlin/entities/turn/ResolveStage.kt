@@ -24,13 +24,13 @@ class ResolveStage : TurnStage {
             .caster
             .abilitiesToResolve
             .value
-            ?.let {
-                if (it.size > 0) {
-                    TargetStage()
-                } else {
-                    EndStage()
+            .let {
+                when{
+                    it?.isNotEmpty() == true && it.peek().skill.targetable -> ResolveStage()
+                    it?.isNotEmpty() == true && it.peek()?.skill?.targetable == false -> ResolveStage().moveStage(stageContext = stageContext)
+                    else -> EndStage().moveStage(stageContext = stageContext)
                 }
-            } ?: EndStage()
+            }
     }
 }
 

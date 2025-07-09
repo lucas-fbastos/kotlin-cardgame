@@ -1,5 +1,6 @@
 package entities.turn
 
+import entities.abilities.AbilityTrigger
 import java.util.Stack
 
 class EndStage : TurnStage {
@@ -11,6 +12,6 @@ class EndStage : TurnStage {
         stageContext.caster.abilitiesToResolve.value = Stack()
     }
 
-    override fun decideNext(stageContext: StageContext): TurnStage = PlayStage()
+    override fun decideNext(stageContext: StageContext): TurnStage = PlayStage(trigger = AbilityTrigger.ON_PLAY)
 
 }
