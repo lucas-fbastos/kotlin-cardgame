@@ -23,7 +23,7 @@ enum class AbilityTrigger{
 }
 
 data class StackAbility(
-    val target: Target?,
+    var target: Target?,
     val skill: AbilityCommand,
 )
 

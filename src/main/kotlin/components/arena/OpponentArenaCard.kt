@@ -267,7 +267,7 @@ fun OpponentArenaCard(
                     )
                 }
                 player.turnStage.value?.let { stage ->
-                    if (stage.getType() == StageType.TARGET) {
+                    if (stage.getType() == StageType.RESOLVE) {
                         ActionButton(
                             text = "Target",
                             onClick = {
