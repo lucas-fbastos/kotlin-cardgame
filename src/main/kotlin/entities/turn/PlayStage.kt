@@ -28,16 +28,32 @@ class PlayStage(
                         .value
                         ?.addAll(it)
                 }
+
+            stageContext
+                .caster
+                .abilitiesToResolve
+                .value
+                ?.let {  abilities ->
+                    if(abilities.isNotEmpty()){
+                        val ability = abilities.pop()
+                        stageContext.caster.selectedAbility.value = ability.takeIf {
+                            it.checkTargets(stageContext)
+                        }
+                    }
+                }
         }
 
     }
 
     override fun decideNext(stageContext: StageContext): TurnStage {
-        stageContext.caster.abilitiesToResolve.value?.let { abilities ->
-            if(abilities.isNotEmpty() && abilities.peek().skill.targetable){
-                return ResolveStage()
-            }
+        stageContext.caster.selectedAbility.value?.let { _ ->
+                return ResolveStage(previousStage = this)
         }
-        return ResolveStage().moveStage(stageContext)
+
+        return EndStage().moveStage(stageContext)
     }
+
+    internal fun StackAbility.checkTargets(stageContext: StageContext) =
+        stageContext.opponent.arena.value.isNotEmpty() && this.skill.targetable
+
 }

@@ -1,5 +1,7 @@
 package entities.abilities
 
+import helper.BoardHelper
+
 class DestroyOnAttack(
     override val trigger: AbilityTrigger = AbilityTrigger.ON_ATTACK,
     override val targetable: Boolean = true,

@@ -14,7 +14,9 @@ interface TurnStage {
 
     fun moveStage( stageContext: StageContext): TurnStage {
         stageAction(stageContext = stageContext)
-        return decideNext(stageContext = stageContext)
+        val next =  decideNext(stageContext = stageContext)
+        println("--------->>>>>MOVING FROM ${this.javaClass.simpleName} to ${next.javaClass.simpleName}")
+        return next
     }
 
 }
@@ -22,12 +24,11 @@ interface TurnStage {
 data class StageContext(
     val caster: Player,
     val opponent: Player,
-    val selectedCard: Card?,
+    var selectedCard: Card?,
 )
 
 enum class StageType{
     PLAY,
     RESOLVE,
-    TARGET,
     END
 }

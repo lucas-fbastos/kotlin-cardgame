@@ -23,21 +23,27 @@ open class Player(
     val attackedBy: MutableState<Card?> = mutableStateOf(value = null),
     val turnStage : MutableState<TurnStage?> = mutableStateOf(null),
     val abilitiesToResolve: MutableState<Stack<StackAbility>?> = mutableStateOf(value = Stack()),
-    val selectedAbility: MutableState<StackAbility?> = mutableStateOf(value = null),
+    var selectedAbility: MutableState<StackAbility?> = mutableStateOf(value = null),
     val selectedCard: MutableState<Card?> = mutableStateOf(value = null ),
 ) {
 
+    //procced after executing the ability, as if the player would attack
     internal fun setTarget(
         target: Card,
         opponent: Opponent
     ){
-        selectedAbility.value?.target?.copy(cardTarget = target)
-        turnStage.value?.moveStage(
+        selectedAbility.value?.target = selectedAbility.value?.target?.copy(cardTarget = target)
+        turnStage.value = turnStage.value?.moveStage(
             stageContext = StageContext(
                 caster = this,
                 opponent = opponent,
                 selectedCard = selectedCard.value!!
             )
+        )
+
+        BoardHelper.removeCardsFromBoard(
+            player = this,
+            opponent = opponent
         )
     }
 
@@ -123,10 +129,23 @@ open class Player(
 
     fun attack(opponent: Opponent, attacker: Card) {
 
-        handleAttackTrigger(
-            card = attacker,
-            opponent = opponent,
-            target = null // CREATE A MECHANISM TO PICK THE TARGET IF APPLICABLE JUST LIKE THE PICK DEFENDER
+        selectedCard.value = attacker
+
+        turnStage.value = PlayStage(trigger = AbilityTrigger.ON_ATTACK)
+            .moveStage(
+                stageContext = StageContext(
+                    caster = this,
+                    opponent = opponent,
+                    selectedCard = attacker
+                )
+            )
+
+        if(selectedAbility.value != null)
+            return
+
+        // in case any card dies during the resolve
+        BoardHelper.removeCardsFromBoard(
+            opponent = opponent, player = this
         )
 
         opponent.setAttackedBy(attacker)
