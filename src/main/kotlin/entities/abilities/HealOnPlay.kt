@@ -11,7 +11,7 @@ class HealOnPlay(
     private fun effect(
         caster: Player,
     )  {
-         caster.lifePoints.value += amountToHeal
+        caster.lifePoints.value += amountToHeal
     }
 
     override fun resolve(

@@ -47,13 +47,18 @@ class PlayStage(
 
     override fun decideNext(stageContext: StageContext): TurnStage {
         stageContext.caster.selectedAbility.value?.let { _ ->
-                return ResolveStage(previousStage = this)
+                return ResolveStage(previousStage = this).moveStage(stageContext)
         }
 
         return EndStage().moveStage(stageContext)
     }
 
     internal fun StackAbility.checkTargets(stageContext: StageContext) =
-        stageContext.opponent.arena.value.isNotEmpty() && this.skill.targetable
+        when {
+            stageContext.opponent.arena.value.isNotEmpty() && this.skill.targetable -> true
+            !this.skill.targetable -> true
+            else -> false
+        }
+
 
 }

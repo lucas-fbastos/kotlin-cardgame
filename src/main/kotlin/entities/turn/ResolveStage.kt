@@ -38,20 +38,22 @@ class ResolveStage(
     }
 
     override fun decideNext(stageContext: StageContext): TurnStage {
-        return stageContext
-            .caster
+
+        val abilitiesToResolve = stageContext.caster
             .abilitiesToResolve
             .value
-            .let {
-                when {
-                    it?.isNotEmpty() == true && it.peek().skill.targetable -> ResolveStage(previousStage = previousStage)
-                    it?.isNotEmpty() == true && it.peek()?.skill?.targetable == false -> ResolveStage(previousStage).moveStage(
+
+        val selectedAbility = stageContext.caster.selectedAbility.value
+
+        return when {
+                    abilitiesToResolve?.isNotEmpty() == true && abilitiesToResolve.peek().skill.targetable -> ResolveStage(previousStage = previousStage)
+                    abilitiesToResolve?.isNotEmpty() == true && abilitiesToResolve.peek()?.skill?.targetable == false -> ResolveStage(previousStage).moveStage(
                         stageContext = stageContext
                     )
-
+                    selectedAbility?.skill?.targetable == true && selectedAbility.target != null -> ResolveStage(previousStage)
                     else -> previousStage
                 }
-            }
+
     }
 }
 
