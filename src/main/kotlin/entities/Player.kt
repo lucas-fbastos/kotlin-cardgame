@@ -7,10 +7,12 @@ import constants.TOTAL_HP
 import entities.abilities.AbilityTrigger
 import entities.abilities.StackAbility
 import entities.keywords.KeywordType
-import entities.turn.PlayStage
-import entities.turn.StageContext
-import entities.turn.TurnAction
-import entities.turn.TurnStage
+import entities.turn.actions.AttackAction
+import entities.turn.actions.PlayAction
+import entities.turn.actions.TurnAction
+import entities.turn.stages.PlayStage
+import entities.turn.stages.StageContext
+import entities.turn.stages.TurnStage
 import helper.BoardHelper
 import java.util.Stack
 
@@ -23,7 +25,7 @@ open class Player(
     val arena: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
     val attackedBy: MutableState<Card?> = mutableStateOf(value = null),
     val turnStage : MutableState<TurnStage?> = mutableStateOf(null),
-    val turnAction: MutableState<TurnAction> = mutableStateOf(TurnAction.PLAY),
+    val turnAction: MutableState<TurnAction> = mutableStateOf(PlayAction()),
     val abilitiesToResolve: MutableState<Stack<StackAbility>?> = mutableStateOf(value = Stack()),
     var selectedAbility: MutableState<StackAbility?> = mutableStateOf(value = null),
     val selectedCard: MutableState<Card?> = mutableStateOf(value = null ),
@@ -45,6 +47,11 @@ open class Player(
 
         BoardHelper.removeCardsFromBoard(
             player = this,
+            opponent = opponent
+        )
+
+        turnAction.value.resume(
+            caster = this,
             opponent = opponent
         )
     }
@@ -93,7 +100,8 @@ open class Player(
             )
     }
 
-    fun attack(opponent: Opponent, attacker: Card) {
+    internal fun startCombat(opponent: Opponent, attacker: Card){
+        turnAction.value = AttackAction()
 
         selectedCard.value = attacker
 
@@ -113,6 +121,9 @@ open class Player(
         BoardHelper.removeCardsFromBoard(
             opponent = opponent, player = this
         )
+    }
+
+    internal fun attack(opponent: Opponent, attacker: Card) {
 
         opponent.setAttackedBy(attacker)
 
@@ -132,6 +143,8 @@ open class Player(
                 }
 
             endTurn(opponent = opponent, player = this, wasPlayerTurn = true)
+
+            turnAction.value = PlayAction()
         }
     }
 

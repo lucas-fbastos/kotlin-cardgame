@@ -219,7 +219,7 @@ fun ArenaCard(
                     card.playerOwned && player.attackedBy.value == null -> {
                         IconButton(
                             onClick = {
-                                player.attack(
+                                player.startCombat(
                                     opponent = opponent,
                                     attacker = card
                                 )
@@ -267,33 +267,3 @@ fun ArenaCard(
     }
 }
 
-
-@Composable
-fun ActionButton(
-    text: String,
-    onClick: () -> Unit,
-    backgroundColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .height(32.dp)
-            .fillMaxWidth(0.8f),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 2.dp
-        )
-    ) {
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}

@@ -1,4 +1,4 @@
-package entities.turn
+package entities.turn.stages
 
 import entities.card.Card
 import entities.Player
@@ -18,16 +18,4 @@ interface TurnStage {
         return next
     }
 
-}
-
-data class StageContext(
-    val caster: Player,
-    val opponent: Player,
-    var selectedCard: Card?,
-)
-
-enum class StageType{
-    PLAY,
-    RESOLVE,
-    END
 }

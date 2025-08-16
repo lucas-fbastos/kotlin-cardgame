@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import components.shared.ActionButton
 import components.shared.KeywordBadge
 import constants.CARD_STRENGTH_GRADIENT
 import constants.COLOR_BRIGHT_RED
@@ -60,7 +61,7 @@ import constants.OPPONENT_BORDER_GRADIENT
 import entities.card.Card
 import entities.Opponent
 import entities.Player
-import entities.turn.StageType
+import entities.turn.stages.StageType
 import kotlin.math.roundToInt
 
 @Composable

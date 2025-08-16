@@ -9,7 +9,8 @@ import entities.card.isPoisonous
 import entities.card.isSneaky
 import entities.card.isTough
 import entities.keywords.KeywordType
-import entities.turn.TurnAction
+import entities.turn.actions.AttackAction
+import entities.turn.actions.TurnAction
 import helper.BoardHelper
 
 class Opponent(
@@ -61,7 +62,7 @@ class Opponent(
         (player.arena.value.isNotEmpty() || checkSneaky() && player.checkSneaky())
 
 
-    fun defend() {
+    internal fun defend() {
         println("DEFEND!!!!!")
         assert(this.attackedBy.value != null)
         val attacker: Card = this.attackedBy.value!!
@@ -99,8 +100,7 @@ class Opponent(
 
     } ?: arena.value.getSmallCard()
 
-
-    fun act(player: Player) {
+    internal fun act(player: Player) {
 
         if(isDefeated()){
             endTurn(
@@ -145,7 +145,7 @@ class Opponent(
         val attacker = arena.value.getDeadlyCard() ?: arena.value.getSmallCard()
         println("ATTACKER : ${attacker.name}")
 
-        this.turnAction.value = TurnAction.ATTACK // TODO: CHECK PROPPER PLACE TO SET ACTION AND ROTATE BACK TO PLAY AFTER ACTION HAPPENS
+        this.turnAction.value = AttackAction() // TODO: CHECK PROPPER PLACE TO SET ACTION AND ROTATE BACK TO PLAY AFTER ACTION HAPPENS
 
         attacker.triggerAttackAnimation()
 
