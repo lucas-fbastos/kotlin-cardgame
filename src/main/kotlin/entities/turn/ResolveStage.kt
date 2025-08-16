@@ -1,11 +1,11 @@
 package entities.turn
 
-import entities.Card
+import entities.card.Card
 import entities.abilities.GameContext
+import entities.abilities.StackAbility
+import java.util.Stack
 
-class ResolveStage(
-    val previousStage: TurnStage
-) : TurnStage {
+class ResolveStage : TurnStage {
 
     override fun getType(): StageType = StageType.RESOLVE
 
@@ -46,13 +46,16 @@ class ResolveStage(
         val selectedAbility = stageContext.caster.selectedAbility.value
 
         return when {
-                    abilitiesToResolve?.isNotEmpty() == true && abilitiesToResolve.peek().skill.targetable -> ResolveStage(previousStage = previousStage)
-                    abilitiesToResolve?.isNotEmpty() == true && abilitiesToResolve.peek()?.skill?.targetable == false -> ResolveStage(previousStage).moveStage(
-                        stageContext = stageContext
-                    )
-                    selectedAbility?.skill?.targetable == true && selectedAbility.target != null -> ResolveStage(previousStage)
-                    else -> previousStage
-                }
+
+            selectedAbility?.skill?.targetable == true && selectedAbility.target?.cardTarget == null -> ResolveStage()
+
+            abilitiesToResolve?.isNotEmpty() == true && !abilitiesToResolve.isTopTargetable() -> ResolveStage()
+                        .moveStage(stageContext = stageContext)
+
+            abilitiesToResolve?.isEmpty() == true  -> EndStage().moveStage(stageContext=stageContext)
+
+            else -> ResolveStage()
+        }
 
     }
 }
@@ -70,3 +73,5 @@ private fun StageContext.toGameContext(cardTarget: Card?) = GameContext(
     card = selectedCard,
     targetCard = cardTarget
 )
+
+private fun Stack<StackAbility>?.isTopTargetable() : Boolean = this?.peek()?.skill?.targetable == true

@@ -52,7 +52,7 @@ import constants.COLOR_DARK_PURPLE
 import constants.COLOR_PURPLE
 import constants.COLOR_SECONDARY
 import constants.CustomIcon
-import entities.Card
+import entities.card.Card
 import entities.Opponent
 import entities.Player
 import me.localx.icons.straight.filled.BoxingGlove

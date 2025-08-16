@@ -1,6 +1,6 @@
 package entities.abilities
 
-import entities.Card
+import entities.card.Card
 import entities.Player
 
 interface AbilityCommand {

@@ -57,7 +57,7 @@ import constants.COLOR_RED
 import constants.DEFAULT_ANIMATION_DURATION
 import constants.OPPONENT_BACKGROUND_GRADIENT
 import constants.OPPONENT_BORDER_GRADIENT
-import entities.Card
+import entities.card.Card
 import entities.Opponent
 import entities.Player
 import entities.turn.StageType

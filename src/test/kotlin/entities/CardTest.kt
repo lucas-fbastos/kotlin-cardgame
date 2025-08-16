@@ -1,5 +1,6 @@
 package entities
 
+import entities.card.Card
 import entities.keywords.Poisonous
 import entities.keywords.Tough
 import org.junit.jupiter.api.Assertions.*

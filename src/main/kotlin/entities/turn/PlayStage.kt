@@ -47,7 +47,7 @@ class PlayStage(
 
     override fun decideNext(stageContext: StageContext): TurnStage {
         stageContext.caster.selectedAbility.value?.let { _ ->
-                return ResolveStage(previousStage = this).moveStage(stageContext)
+                return ResolveStage().moveStage(stageContext)
         }
 
         return EndStage().moveStage(stageContext)

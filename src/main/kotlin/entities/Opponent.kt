@@ -2,7 +2,14 @@ package entities
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import entities.card.Card
+import entities.abilities.AbilityTrigger
+import entities.abilities.GameContext
+import entities.card.isPoisonous
+import entities.card.isSneaky
+import entities.card.isTough
 import entities.keywords.KeywordType
+import entities.turn.TurnAction
 import helper.BoardHelper
 
 class Opponent(
@@ -130,7 +137,6 @@ class Opponent(
         )
     }
 
-
     private fun attack(
         player: Player,
         canDefend: Boolean,
@@ -139,12 +145,14 @@ class Opponent(
         val attacker = arena.value.getDeadlyCard() ?: arena.value.getSmallCard()
         println("ATTACKER : ${attacker.name}")
 
+        this.turnAction.value = TurnAction.ATTACK // TODO: CHECK PROPPER PLACE TO SET ACTION AND ROTATE BACK TO PLAY AFTER ACTION HAPPENS
+
         attacker.triggerAttackAnimation()
 
         handleAttackTrigger(
             card = attacker,
             opponent = player,
-            target = null // create mechanism to select the target something like the pick card to attack
+            target = null // TODO: IMPLEMENT THE TURNSTAGE MECHANIC HERE
         )
 
         if (canDefend || (player.arena.value.isNotEmpty() && !checkSneaky())) {
@@ -167,6 +175,42 @@ class Opponent(
         )
 
 
+    }
+
+    private fun handleAttackTrigger(
+        card: Card,
+        opponent: Player,
+        target: Card? = null,
+    ){
+        handleTrigger(
+            trigger = AbilityTrigger.ON_ATTACK,
+            card = card,
+            opponent = opponent,
+            target = target
+        )
+    }
+
+    private fun handleTrigger(
+        card: Card,
+        opponent: Player,
+        target: Card? = null,
+        trigger: AbilityTrigger,){
+
+        val gameContext = GameContext(
+            card = card,
+            caster = this,
+            opponent = opponent,
+            targetCard = target
+        )
+
+        card
+            .abilities
+            .filter { it.trigger == trigger}
+            .map {
+                it.resolve(
+                    gameContext
+                )
+            }
     }
 
     private fun selectCardToPlay(player: Player): Card {
@@ -195,15 +239,6 @@ internal fun Player.checkSneaky() =
             card.keywords
                 .any { it.getType() == KeywordType.SNEAKY }
         }
-
-internal fun Card.isPoisonous(): Boolean =
-    this.keywords.any { it.getType() == KeywordType.POISONOUS }
-
-internal fun Card.isSneaky(): Boolean =
-    this.keywords.any { it.getType() == KeywordType.SNEAKY }
-
-internal fun Card.isTough(): Boolean =
-    this.keywords.any { it.getType() == KeywordType.TOUGH }
 
 internal fun Player.hasMindBugs() = this.amountOfMindBugs > 0
 

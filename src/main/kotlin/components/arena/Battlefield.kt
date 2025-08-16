@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.zIndex
-import entities.Card
+import entities.card.Card
 import entities.Opponent
 import entities.Player
 

@@ -1,7 +1,6 @@
 package entities.turn
 
-import entities.Card
-import entities.Opponent
+import entities.card.Card
 import entities.Player
 
 interface TurnStage {

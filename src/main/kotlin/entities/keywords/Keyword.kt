@@ -1,6 +1,6 @@
 package entities.keywords
 
-import entities.Card
+import entities.card.Card
 
 interface Keyword {
 

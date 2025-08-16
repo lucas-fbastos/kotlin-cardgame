@@ -2,13 +2,14 @@ package entities
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import entities.card.Card
 import constants.TOTAL_HP
 import entities.abilities.AbilityTrigger
-import entities.abilities.GameContext
 import entities.abilities.StackAbility
 import entities.keywords.KeywordType
 import entities.turn.PlayStage
 import entities.turn.StageContext
+import entities.turn.TurnAction
 import entities.turn.TurnStage
 import helper.BoardHelper
 import java.util.Stack
@@ -22,6 +23,7 @@ open class Player(
     val arena: MutableState<MutableList<Card>> = mutableStateOf(value = mutableListOf()),
     val attackedBy: MutableState<Card?> = mutableStateOf(value = null),
     val turnStage : MutableState<TurnStage?> = mutableStateOf(null),
+    val turnAction: MutableState<TurnAction> = mutableStateOf(TurnAction.PLAY),
     val abilitiesToResolve: MutableState<Stack<StackAbility>?> = mutableStateOf(value = Stack()),
     var selectedAbility: MutableState<StackAbility?> = mutableStateOf(value = null),
     val selectedCard: MutableState<Card?> = mutableStateOf(value = null ),
@@ -89,42 +91,6 @@ open class Player(
                     selectedCard = card
                 )
             )
-    }
-
-    protected fun handleAttackTrigger(
-        card: Card,
-        opponent: Player,
-        target: Card? = null,
-    ){
-        handleTrigger(
-            trigger = AbilityTrigger.ON_ATTACK,
-            card = card,
-            opponent = opponent,
-            target = target
-        )
-    }
-
-    private fun handleTrigger(
-        card: Card,
-        opponent: Player,
-        target: Card? = null,
-        trigger: AbilityTrigger,){
-
-        val gameContext = GameContext(
-            card = card,
-            caster = this,
-            opponent = opponent,
-            targetCard = target
-        )
-
-        card
-            .abilities
-            .filter { it.trigger == trigger}
-            .map {
-                it.resolve(
-                    gameContext
-                )
-            }
     }
 
     fun attack(opponent: Opponent, attacker: Card) {

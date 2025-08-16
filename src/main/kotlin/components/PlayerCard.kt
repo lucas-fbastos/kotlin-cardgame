@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
-import entities.Card
+import entities.card.Card
 import entities.Opponent
 import entities.Player
 import helper.BoardHelper

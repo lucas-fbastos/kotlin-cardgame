@@ -36,7 +36,7 @@ import constants.COLOR_PRIMARY
 import entities.Opponent
 import entities.Player
 import helper.BoardHelper
-import seeder.seed
+import helper.seed
 
 @Composable
 @Preview

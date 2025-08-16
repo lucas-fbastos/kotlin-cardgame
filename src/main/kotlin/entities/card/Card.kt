@@ -1,4 +1,4 @@
-package entities
+package entities.card
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

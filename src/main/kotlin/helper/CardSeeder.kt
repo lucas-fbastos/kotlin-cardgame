@@ -1,9 +1,9 @@
-package seeder
+package helper
 
 import constants.alchemistHedgehogRef
 import constants.deadlyHamsterRef
 import constants.phoneStealerOtterRef
-import entities.Card
+import entities.card.Card
 import entities.abilities.DestroyOnAttack
 import entities.abilities.HealOnPlay
 import entities.abilities.HitDirectlyOnAttack
