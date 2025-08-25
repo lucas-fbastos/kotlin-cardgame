@@ -19,8 +19,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -52,15 +50,15 @@ import constants.COLOR_DARK_PURPLE
 import constants.COLOR_PURPLE
 import constants.COLOR_SECONDARY
 import constants.CustomIcon
-import entities.card.Card
 import entities.Opponent
 import entities.Player
+import entities.card.Card
 import me.localx.icons.straight.filled.BoxingGlove
 import me.localx.icons.straight.filled.Shield
 import kotlin.math.roundToInt
 
 @Composable
-fun ArenaCard(
+fun DetailedArenaCard(
     card: Card,
     player: Player,
     opponent: Opponent,
@@ -73,54 +71,38 @@ fun ArenaCard(
     var cardSize by remember { mutableStateOf(Offset.Zero) }
 
     Box(
-        modifier = modifier
-            .padding(6.dp)
-            .size(
-                width = cardWidth,
-                height = cardHeight,
+        modifier = modifier.padding(6.dp).size(
+            width = cardWidth,
+            height = cardHeight,
+        ).offset {
+            IntOffset(
+                x = offset.x.roundToInt(), y = offset.y.roundToInt()
             )
-            .offset {
-                IntOffset(
-                    x = offset.x.roundToInt(),
-                    y = offset.y.roundToInt()
-                )
-            }
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = CARD_BACKGROUND_GRADIENT
-                )
+        }.clip(RoundedCornerShape(12.dp)).background(
+            brush = Brush.verticalGradient(
+                colors = CARD_BACKGROUND_GRADIENT
             )
-            .border(
-                width = 2.dp,
-                brush = Brush.linearGradient(
-                    colors = CARD_BORDER_GRADIENT
-                ),
-                shape = RoundedCornerShape(12.dp)
+        ).border(
+            width = 2.dp, brush = Brush.linearGradient(
+                colors = CARD_BORDER_GRADIENT
+            ), shape = RoundedCornerShape(12.dp)
+        ).onGloballyPositioned { layoutCoordinates ->
+            cardPosition = layoutCoordinates.positionInRoot()
+            cardSize = Offset(
+                x = layoutCoordinates.size.width.toFloat(), y = layoutCoordinates.size.height.toFloat()
             )
-            .onGloballyPositioned { layoutCoordinates ->
-                cardPosition = layoutCoordinates.positionInRoot()
-                cardSize = Offset(
-                    x = layoutCoordinates.size.width.toFloat(),
-                    y = layoutCoordinates.size.height.toFloat()
-                )
-            }
+        }
     ) {
         val imageHeight = cardHeight * 0.7f
         val actionHeight = cardHeight * 0.3f
 
         Column {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imageHeight)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                    .background(
+                modifier = Modifier.fillMaxWidth().height(imageHeight)
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)).background(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                Color(0xFF4C1D95),
-                                Color(0xFF312E81),
-                                Color(0xFF1E1B4B)
+                                Color(0xFF4C1D95), Color(0xFF312E81), Color(0xFF1E1B4B)
                             )
                         )
                     )
@@ -135,9 +117,7 @@ fun ArenaCard(
                 }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -145,20 +125,13 @@ fun ArenaCard(
 
                     // Strength
                     Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .background(
+                        modifier = Modifier.size(32.dp).background(
                                 brush = Brush.radialGradient(
                                     colors = CARD_STRENGTH_GRADIENT
-                                ),
-                                shape = CircleShape
-                            )
-                            .border(
-                                width = 2.dp,
-                                color = Color.White.copy(alpha = 0.8f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
+                                ), shape = CircleShape
+                            ).border(
+                                width = 2.dp, color = Color.White.copy(alpha = 0.8f), shape = CircleShape
+                            ), contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = card.strength.toString(),
@@ -172,9 +145,7 @@ fun ArenaCard(
                 // Keywords overlay at bottom
                 if (card.keywords.isNotEmpty()) {
                     LazyRow(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(8.dp),
+                        modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         items(card.keywords) { keyword ->
@@ -185,30 +156,23 @@ fun ArenaCard(
             }
 
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(actionHeight)
-                    .background(COLOR_DARK_PURPLE)
-                    .padding(8.dp)
+                modifier = Modifier.fillMaxWidth().height(actionHeight).background(COLOR_DARK_PURPLE).padding(8.dp)
             ) {
                 when {
                     player.attackedBy.value != null && card.playerOwned && card.canDefend(attacker = player.attackedBy.value!!) -> {
                         IconButton(
                             onClick = {
                                 player.defend(
-                                    opponent = opponent,
-                                    card = card
+                                    opponent = opponent, card = card
                                 )
                             },
 
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .border(
+                            modifier = Modifier.align(Alignment.Center).border(
                                     width = 1.dp,
                                     color = COLOR_PURPLE.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
-                        ){
+                        ) {
                             Icon(
                                 painter = rememberVectorPainter(CustomIcon.Shield),
                                 contentDescription = null,
@@ -217,23 +181,21 @@ fun ArenaCard(
                             )
                         }
                     }
+
                     card.playerOwned && player.attackedBy.value == null -> {
                         IconButton(
                             onClick = {
                                 player.startCombat(
-                                    opponent = opponent,
-                                    attacker = card
+                                    opponent = opponent, attacker = card
                                 )
                             },
 
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .border(
+                            modifier = Modifier.align(Alignment.Center).border(
                                     width = 1.dp,
                                     color = Color.White.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
-                        ){
+                        ) {
                             Icon(
                                 painter = rememberVectorPainter(CustomIcon.BoxingGlove),
                                 contentDescription = null,
@@ -242,18 +204,15 @@ fun ArenaCard(
                             )
                         }
                     }
+
                     card.playerOwned -> {
                         IconButton(
-                            enabled = false,
-                            onClick = {  },
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .border(
+                            enabled = false, onClick = { }, modifier = Modifier.align(Alignment.Center).border(
                                     width = 1.dp,
                                     color = COLOR_PURPLE.copy(alpha = 0.3f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
-                        ){
+                        ) {
                             Icon(
                                 painter = rememberVectorPainter(CustomIcon.Shield),
                                 contentDescription = null,
@@ -267,4 +226,3 @@ fun ArenaCard(
         }
     }
 }
-

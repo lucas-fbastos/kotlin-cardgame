@@ -31,30 +31,6 @@ open class Player(
     val selectedCard: MutableState<Card?> = mutableStateOf(value = null ),
 ) {
 
-    //procced after executing the ability, as if the player would attack
-    internal fun setTarget(
-        target: Card,
-        opponent: Opponent
-    ){
-        selectedAbility.value?.target = selectedAbility.value?.target?.copy(cardTarget = target)
-        turnStage.value = turnStage.value?.moveStage(
-            stageContext = StageContext(
-                caster = this,
-                opponent = opponent,
-                selectedCard = selectedCard.value!!
-            )
-        )
-
-        BoardHelper.removeCardsFromBoard(
-            player = this,
-            opponent = opponent
-        )
-
-        turnAction.value.resume(
-            caster = this,
-            opponent = opponent
-        )
-    }
 
     internal fun isDefeated() : Boolean = lifePoints.value <= 0 || ( hand.value.size == 0 && arena.value.size == 0 )
 
@@ -98,6 +74,30 @@ open class Player(
                     selectedCard = card
                 )
             )
+    }
+
+    internal fun resolveTargetedAbility(
+        target: Card,
+        opponent: Opponent
+    ){
+        selectedAbility.value?.target = selectedAbility.value?.target?.copy(cardTarget = target)
+        turnStage.value = turnStage.value?.moveStage(
+            stageContext = StageContext(
+                caster = this,
+                opponent = opponent,
+                selectedCard = selectedCard.value!!
+            )
+        )
+
+        BoardHelper.removeCardsFromBoard(
+            player = this,
+            opponent = opponent
+        )
+
+        turnAction.value.resume(
+            caster = this,
+            opponent = opponent
+        )
     }
 
     internal fun startCombat(opponent: Opponent, attacker: Card){

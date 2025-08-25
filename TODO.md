@@ -1,18 +1,17 @@
 
 ### CONTINUE
-- IMPLEMENT A WAY OF RESUME TURN ACTION AFTER RESOLVE ABILITY (EXAMPLE HIT AFTER ON ATTACK IS RESOLVED)
 - CHECK HOW IT RESOLVES IN THE OPPONENT SIDE 
 
 ### TODO LIST
+- implement card highlight when mouseover
 - implement mindbugs
-- select target card for abilities
 - get all colors in commons 
 - indicative of attacker
 - create refined strategy for opponent to check cards before selecting the attacker 
 - add animations to play card and attack card (opponent and player) play card animation can control the delay of the opponent action
-- add start menu
 - extra row of cards when arena is too big
 - rework ui
+- add start menu
 
 ###  DONE
 - player basics

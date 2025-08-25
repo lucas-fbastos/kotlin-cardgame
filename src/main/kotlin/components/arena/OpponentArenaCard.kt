@@ -71,6 +71,7 @@ fun OpponentArenaCard(
     cardHeight: Dp,
     player: Player,
     opponent: Opponent,
+    modifier: Modifier
 ) {
     val offset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
@@ -106,7 +107,7 @@ fun OpponentArenaCard(
     )
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(6.dp)
             .size(width = cardWidth, height = cardHeight)
             .offset {
@@ -272,7 +273,7 @@ fun OpponentArenaCard(
                         ActionButton(
                             text = "Target",
                             onClick = {
-                                player.setTarget(
+                                player.resolveTargetedAbility(
                                     target = card,
                                     opponent = opponent
                                 )
