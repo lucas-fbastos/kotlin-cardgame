@@ -14,4 +14,6 @@ class Tough : Keyword {
     override fun isActive(target: Card?, self: Card) = self.resistance
 
     override fun getType(): KeywordType = KeywordType.TOUGH
+
+    override fun getDescription(): String = " Cards with Tough have an extra life, when they are suposed to be destroyed, remove its resistence counter instead "
 }

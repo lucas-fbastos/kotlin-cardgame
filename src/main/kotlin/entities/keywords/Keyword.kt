@@ -11,4 +11,6 @@ interface Keyword {
     fun getType(): KeywordType
 
     fun refresh() = run { }
+
+    fun getDescription() : String
 }

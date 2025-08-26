@@ -17,4 +17,6 @@ class Frenzy : Keyword {
     override fun refresh() {
         active = true
     }
+
+    override fun getDescription(): String = " Cards with Frenzy can attack twice if they survive the first attack "
 }

@@ -10,4 +10,6 @@ class Poisonous : Keyword {
 
     override fun getType(): KeywordType = KeywordType.POISONOUS
 
+    override fun getDescription(): String = " Cards with poisonous will kill with any amount of damage "
+
 }

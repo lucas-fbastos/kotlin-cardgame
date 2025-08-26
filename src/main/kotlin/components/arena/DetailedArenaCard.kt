@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -117,26 +118,44 @@ fun DetailedArenaCard(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(8.dp)
+                        .background(
+                            brush = SolidColor(value = Color.DarkGray),
+                            alpha = 0.7f
+                        ),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.offset(x = cardWidth /6 ),
+                    ){
+                        Text(
+                            text = card.name,
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
 
                     // Strength
                     Box(
-                        modifier = Modifier.size(32.dp).background(
+                        modifier = Modifier.size(48.dp).background(
                                 brush = Brush.radialGradient(
                                     colors = CARD_STRENGTH_GRADIENT
                                 ), shape = CircleShape
                             ).border(
-                                width = 2.dp, color = Color.White.copy(alpha = 0.8f), shape = CircleShape
+                                width = 4.dp, color = Color.White.copy(alpha = 0.8f), shape = CircleShape
                             ), contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = card.strength.toString(),
                             color = Color.White,
-                            fontSize = 14.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
