@@ -48,6 +48,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.shared.KeywordBadge
+import constants.CARD_GRADIENT_IMAGE_AREA
+import constants.CARD_STRENGTH_GRADIENT
+import constants.COLOR_DARK_PURPLE
+import constants.COLOR_PURPLE_ALPHA
+import constants.COLOR_TEXT_SECONDARY
 import entities.card.Card
 import entities.Opponent
 import entities.Player
@@ -103,8 +108,8 @@ fun PlayerCard(
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(16.dp),
-                ambientColor = Color(0xFF8B5CF6).copy(alpha = 0.3f),
-                spotColor = Color(0xFF8B5CF6).copy(alpha = 0.3f)
+                ambientColor = COLOR_PURPLE_ALPHA,
+                spotColor = COLOR_PURPLE_ALPHA
             )
             .onGloballyPositioned { layoutCoordinates ->
                 cardPosition = layoutCoordinates.positionInRoot()
@@ -126,7 +131,8 @@ fun PlayerCard(
                                 BoardHelper.blockPlayer()
                                 player.playCard(
                                     card = card,
-                                    opponent = opponent)
+                                    opponent = opponent
+                                )
                                 isPlayed = true
                                 player.endTurn(
                                     player = player,
@@ -184,10 +190,7 @@ fun PlayerCard(
                         .size(iconSize)
                         .background(
                             brush = Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFF8B5CF6),
-                                    Color(0xFF6D28D9)
-                                )
+                                colors = CARD_STRENGTH_GRADIENT
                             ),
                             shape = CircleShape
                         )
@@ -217,16 +220,12 @@ fun PlayerCard(
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         brush = Brush.radialGradient(
-                            colors = listOf(
-                                Color(0xFF4C1D95),
-                                Color(0xFF312E81),
-                                Color(0xFF1E1B4B)
-                            )
+                            colors = CARD_GRADIENT_IMAGE_AREA
                         )
                     )
                     .border(
                         width = 1.dp,
-                        color = Color(0xFF8B5CF6).copy(alpha = 0.3f),
+                        color = COLOR_PURPLE_ALPHA,
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
@@ -267,27 +266,25 @@ fun PlayerCard(
 
             Spacer(modifier = Modifier.height((8 * scale).dp))
 
-            card.flavorText?.let { flavorText ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = Color(0xFF1F1F35),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding((8 * scale).dp)
-                ) {
-                    Text(
-                        text = flavorText,
-                        color = Color(0xFFD1D5DB),
-                        fontSize = smallFontSize,
-                        fontStyle = FontStyle.Italic,
-                        lineHeight = (14 * scale).sp,
-                        textAlign = TextAlign.Center,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = COLOR_DARK_PURPLE,
+                        shape = RoundedCornerShape(8.dp)
                     )
-                }
+                    .padding((8 * scale).dp)
+            ) {
+                Text(
+                    text = card.flavorText,
+                    color = COLOR_TEXT_SECONDARY,
+                    fontSize = smallFontSize,
+                    fontStyle = FontStyle.Italic,
+                    lineHeight = (14 * scale).sp,
+                    textAlign = TextAlign.Center,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

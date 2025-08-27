@@ -12,7 +12,7 @@ data class Card(
     val id: UUID = UUID.randomUUID(),
     val name: String,
     val strength: Int,
-    val flavorText: String? = null,
+    val flavorText: String,
     val abilities: MutableList<AbilityCommand> = mutableListOf(),
     var alive: Boolean = true,
     var playerOwned: Boolean = true,

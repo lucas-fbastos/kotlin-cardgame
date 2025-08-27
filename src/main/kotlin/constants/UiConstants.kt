@@ -13,7 +13,9 @@ internal val COLOR_BORDER = Color(0xFF404040)
 internal val COLOR_GREEN = Color(0xFF059669)
 internal val COLOR_DARK_PURPLE = Color(0xFF1F1F35)
 internal val COLOR_PURPLE = Color(0xFF8B5CF6)
+internal val COLOR_PURPLE_ALPHA = COLOR_PURPLE.copy(alpha = 0.3f)
 internal val COLOR_ORANGE = Color(0xFFE67E22)
+internal val COLOR_ORANGE_ALPHA = COLOR_ORANGE.copy(alpha = 0.3f)
 internal val COLOR_DARK_ORANGE = Color(0xFF2E1907)
 internal val COLOR_ORANGE_RED = Color(0xFFFF4500)
 internal val COLOR_BRIGHT_RED = Color(0xFFFF6347)
@@ -46,6 +48,12 @@ internal val OPPONENT_BACKGROUND_GRADIENT = listOf(
 internal val OPPONENT_BORDER_GRADIENT = listOf(
     COLOR_ORANGE,
     Color(0xFFE67f44),
+)
+
+internal val CARD_GRADIENT_IMAGE_AREA = listOf(
+    Color(0xFF4C1D95),
+    Color(0xFF312E81),
+    Color(0xFF1E1B4B)
 )
 
 internal const val DEFAULT_ANIMATION_DURATION = 800

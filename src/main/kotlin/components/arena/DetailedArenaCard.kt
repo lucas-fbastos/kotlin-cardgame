@@ -38,7 +38,10 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -50,6 +53,7 @@ import constants.CARD_STRENGTH_GRADIENT
 import constants.COLOR_DARK_PURPLE
 import constants.COLOR_PURPLE
 import constants.COLOR_SECONDARY
+import constants.COLOR_TEXT_SECONDARY
 import constants.CustomIcon
 import entities.Opponent
 import entities.Player
@@ -156,7 +160,7 @@ fun DetailedArenaCard(
                             text = card.strength.toString(),
                             color = Color.White,
                             fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
@@ -175,72 +179,24 @@ fun DetailedArenaCard(
             }
 
             Box(
-                modifier = Modifier.fillMaxWidth().height(actionHeight).background(COLOR_DARK_PURPLE).padding(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = COLOR_DARK_PURPLE,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(30.dp)
             ) {
-                when {
-                    player.attackedBy.value != null && card.playerOwned && card.canDefend(attacker = player.attackedBy.value!!) -> {
-                        IconButton(
-                            onClick = {
-                                player.defend(
-                                    opponent = opponent, card = card
-                                )
-                            },
-
-                            modifier = Modifier.align(Alignment.Center).border(
-                                    width = 1.dp,
-                                    color = COLOR_PURPLE.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                        ) {
-                            Icon(
-                                painter = rememberVectorPainter(CustomIcon.Shield),
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                tint = COLOR_PURPLE.copy(alpha = 0.6f),
-                            )
-                        }
-                    }
-
-                    card.playerOwned && player.attackedBy.value == null -> {
-                        IconButton(
-                            onClick = {
-                                player.startCombat(
-                                    opponent = opponent, attacker = card
-                                )
-                            },
-
-                            modifier = Modifier.align(Alignment.Center).border(
-                                    width = 1.dp,
-                                    color = Color.White.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                        ) {
-                            Icon(
-                                painter = rememberVectorPainter(CustomIcon.BoxingGlove),
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                tint = COLOR_PURPLE.copy(alpha = 0.6f),
-                            )
-                        }
-                    }
-
-                    card.playerOwned -> {
-                        IconButton(
-                            enabled = false, onClick = { }, modifier = Modifier.align(Alignment.Center).border(
-                                    width = 1.dp,
-                                    color = COLOR_PURPLE.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                        ) {
-                            Icon(
-                                painter = rememberVectorPainter(CustomIcon.Shield),
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                tint = COLOR_SECONDARY.copy(alpha = 0.9f),
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = card.flavorText,
+                    color = COLOR_TEXT_SECONDARY,
+                    fontSize = 28.sp,
+                    fontStyle = FontStyle.Italic,
+                    lineHeight = 32.sp,
+                    textAlign = TextAlign.Justify,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

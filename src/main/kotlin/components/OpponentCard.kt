@@ -22,6 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import constants.COLOR_ORANGE
+import constants.COLOR_ORANGE_ALPHA
+import constants.OPPONENT_BACKGROUND_GRADIENT
 import entities.card.Card
 
 @Composable
@@ -35,22 +38,18 @@ fun OpponentCard(
             .clip(RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF3E2A2A),
-                        Color(0xFF2E1A1A),
-                        Color(0xFF1F0F0F)
-                    )
+                    colors = OPPONENT_BACKGROUND_GRADIENT
                 )
             )
             .border(
                 width = 2.dp,
-                color = Color(0xFFE67E22),
+                color = COLOR_ORANGE,
                 shape = RoundedCornerShape(16.dp)
             )
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(16.dp),
-                ambientColor = Color(0xFFE67E22).copy(alpha = 0.3f)
+                ambientColor = COLOR_ORANGE_ALPHA
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -61,7 +60,7 @@ fun OpponentCard(
             // Large question mark
             Text(
                 text = "?",
-                color = Color(0xFFE67E22),
+                color = COLOR_ORANGE,
                 fontSize = 72.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -71,7 +70,7 @@ fun OpponentCard(
             // Hidden card text
             Text(
                 text = card.name,
-                color = Color(0xFFE67E22).copy(alpha = 0.7f),
+                color = COLOR_ORANGE,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

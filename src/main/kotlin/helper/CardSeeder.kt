@@ -25,7 +25,7 @@ fun seed(): List<Card> {
 private fun createRegularAnt(): Card = Card(
     name = "Regular Ant",
     strength = 1,
-    flavorText = "just an Ant",
+    flavorText = "Just an Ant",
     abilities = mutableListOf(
         HealOnPlay(amountToHeal = 1),
         DestroyOnAttack(),
