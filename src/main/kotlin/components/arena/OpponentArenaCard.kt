@@ -1,7 +1,12 @@
 package components.arena
 
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,6 +41,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -106,8 +112,43 @@ fun OpponentArenaCard(
         )
     )
 
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val floatY by infiniteTransition.animateFloat(
+        initialValue = -6f,
+        targetValue = 6f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val floatX by infiniteTransition.animateFloat(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = -1.5f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3200, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Box(
         modifier = modifier
+            .graphicsLayer(
+                translationX = floatX,
+                translationY = floatY,
+                rotationZ = rotation,
+                rotationX = OPPONENT_CARD_ROTATION_X,
+            )
             .padding(6.dp)
             .size(width = cardWidth, height = cardHeight)
             .offset {
@@ -153,7 +194,10 @@ fun OpponentArenaCard(
                     y = layoutCoordinates.size.height.toFloat()
                 )
             }
+
     ) {
+
+
 
         val imageHeight = cardHeight * 0.7f
         val actionHeight = cardHeight * 0.3f
@@ -302,3 +346,5 @@ fun OpponentArenaCard(
         }
     }
 }
+
+private const val OPPONENT_CARD_ROTATION_X = 10f

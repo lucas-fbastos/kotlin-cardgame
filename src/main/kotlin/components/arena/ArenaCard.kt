@@ -1,5 +1,11 @@
 package components.arena
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -72,8 +79,43 @@ fun ArenaCard(
     var cardPosition by remember { mutableStateOf(Offset.Zero) }
     var cardSize by remember { mutableStateOf(Offset.Zero) }
 
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val floatY by infiniteTransition.animateFloat(
+        initialValue = -6f,
+        targetValue = 6f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val floatX by infiniteTransition.animateFloat(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = -1.5f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3200, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Box(
         modifier = modifier
+            .graphicsLayer(
+                translationX = floatX,
+                translationY = floatY,
+                rotationZ = rotation,
+                rotationX = PLAYER_CARD_ROTATION_X
+            )
             .padding(6.dp)
             .size(
                 width = cardWidth,
@@ -102,7 +144,7 @@ fun ArenaCard(
                 cardPosition = layoutCoordinates.positionInRoot()
                 cardSize = Offset(
                     x = layoutCoordinates.size.width.toFloat(),
-                    y = layoutCoordinates.size.height.toFloat()
+                    y = layoutCoordinates.size.height.toFloat(),
                 )
             }
     ) {
@@ -268,3 +310,4 @@ fun ArenaCard(
     }
 }
 
+private const val PLAYER_CARD_ROTATION_X = 15f

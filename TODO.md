@@ -65,6 +65,7 @@
 - frenzy cards didn't release player
 - added detailed card for the on mouse over event 
 - added descriptions to the keywords
+- added animations for the idle arena cards
 
 ## LINKS 
 - initial design for card: https://www.figma.com/design/gE3nTNrI9oPwxc3TbKtfgN/card-game?node-id=0-1&node-type=canvas&t=tBMIXx0dpl2balp8-0
